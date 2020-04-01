@@ -1,6 +1,8 @@
 package fi.chaocompany.online;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -12,14 +14,16 @@ import fi.chaocompany.online.map.TileMap;
 
 public class RoomState implements Screen {
 
+    private static final String LOG_TAG = RoomState.class.getSimpleName();
+
     private SpriteBatch batch;
     private TileMap tileMap;
     private OrthographicCamera camera;
 
     public RoomState() {
-
         // Set camera controls
-        Gdx.input.setInputProcessor(new GestureDetector(new GestureDetector.GestureAdapter() {
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(new GestureDetector(new GestureDetector.GestureAdapter() {
             @Override
             public boolean pan(float x, float y, float deltaX, float deltaY) {
                 float panSpeed = 1f;
@@ -31,6 +35,23 @@ public class RoomState implements Screen {
                 return false;
             }
         }));
+
+        multiplexer.addProcessor(new InputAdapter() {
+            @Override
+            public boolean scrolled(int amount) {
+
+                float min = 1f;
+                float max = 3;
+                float zoomSpeed = 0.5f;
+
+                float zoomAmount = camera.zoom + amount * zoomSpeed;
+                if (zoomAmount > min && zoomAmount < max) {
+                    camera.zoom = zoomAmount;
+                }
+                return super.scrolled(amount);
+            }
+        });
+        Gdx.input.setInputProcessor(multiplexer);
 
         batch = new SpriteBatch();
         int[][] map = new int[][]{
