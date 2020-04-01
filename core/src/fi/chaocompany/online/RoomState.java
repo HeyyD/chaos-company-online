@@ -1,18 +1,58 @@
 package fi.chaocompany.online;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Vector3;
 import fi.chaocompany.online.map.TileMap;
 
 public class RoomState implements Screen {
 
+    private static final String LOG_TAG = RoomState.class.getSimpleName();
+
     private SpriteBatch batch;
     private TileMap tileMap;
+    private OrthographicCamera camera;
 
     public RoomState() {
+        // Set camera controls
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(new GestureDetector(new GestureDetector.GestureAdapter() {
+            @Override
+            public boolean pan(float x, float y, float deltaX, float deltaY) {
+                float panSpeed = 1f;
+                Vector3 pos = camera.position;
+                pos.x -= deltaX * panSpeed;
+                pos.y += deltaY * panSpeed;
+
+                camera.position.set(pos);
+                return false;
+            }
+        }));
+
+        multiplexer.addProcessor(new InputAdapter() {
+            @Override
+            public boolean scrolled(int amount) {
+
+                float min = 1f;
+                float max = 3;
+                float zoomSpeed = 0.5f;
+
+                float zoomAmount = camera.zoom + amount * zoomSpeed;
+                if (zoomAmount > min && zoomAmount < max) {
+                    camera.zoom = zoomAmount;
+                }
+                return super.scrolled(amount);
+            }
+        });
+        Gdx.input.setInputProcessor(multiplexer);
+
         batch = new SpriteBatch();
         int[][] map = new int[][]{
                 {0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 8},
@@ -31,6 +71,9 @@ public class RoomState implements Screen {
 
         Texture texture = new Texture("tileset.png");
         this.tileMap = new TileMap(map, texture);
+
+        this.camera = new OrthographicCamera();
+        this.camera.setToOrtho(false);
     }
 
     @Override
@@ -39,12 +82,15 @@ public class RoomState implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        batch.setProjectionMatrix(this.camera.combined);
         batch.begin();
         this.tileMap.drawMap(batch);
         batch.end();
+
+        this.camera.update();
     }
 
     @Override
