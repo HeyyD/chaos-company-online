@@ -12,6 +12,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector3;
 import fi.chaocompany.online.map.TileMap;
 import fi.chaocompany.online.player.Player;
+import fi.chaocompany.online.player.PlayerConstants;
 
 public class RoomState implements Screen {
 
@@ -39,6 +40,17 @@ public class RoomState implements Screen {
         }));
 
         multiplexer.addProcessor(new InputAdapter() {
+
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                // Move player
+                Vector3 point = camera.unproject(new Vector3(screenX, screenY, 0));
+                point.x = point.x - PlayerConstants.FRAME_WIDTH_PIXELS / 2f;
+                point.y = point.y - PlayerConstants.FRAME_HEIGHT_PIXELS / 2f;
+                player.move(point.x, point.y);
+                return super.touchUp(screenX, screenY, pointer, button);
+            }
+
             @Override
             public boolean scrolled(int amount) {
 

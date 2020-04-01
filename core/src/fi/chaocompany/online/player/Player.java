@@ -20,4 +20,9 @@ public class Player {
     public void draw(SpriteBatch batch) {
         batch.draw(this.sprite, this.x, this.y, PlayerConstants.FRAME_WIDTH_PIXELS, PlayerConstants.FRAME_HEIGHT_PIXELS);
     }
+
+    public void move(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
 }
