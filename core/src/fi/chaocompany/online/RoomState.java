@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector3;
 import fi.chaocompany.online.map.TileMap;
+import fi.chaocompany.online.player.Player;
 
 public class RoomState implements Screen {
 
@@ -19,6 +20,7 @@ public class RoomState implements Screen {
     private SpriteBatch batch;
     private TileMap tileMap;
     private OrthographicCamera camera;
+    private Player player;
 
     public RoomState() {
         // Set camera controls
@@ -74,6 +76,8 @@ public class RoomState implements Screen {
 
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false);
+
+        this.player = new Player(new Texture("player/player_1.png"));
     }
 
     @Override
@@ -88,6 +92,7 @@ public class RoomState implements Screen {
         batch.setProjectionMatrix(this.camera.combined);
         batch.begin();
         this.tileMap.drawMap(batch);
+        this.player.draw(batch);
         batch.end();
 
         this.camera.update();
