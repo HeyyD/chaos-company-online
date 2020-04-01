@@ -18,4 +18,12 @@ public class Tile {
     public void draw(SpriteBatch batch, float x, float y, float width, float height) {
         batch.draw(texture, x, y, width, height);
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }
