@@ -22,10 +22,13 @@ public class TileMap {
 
         // Create tiles of the map
         this.tiles = new Tile[map.length][map[0].length];
-
         for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[i].length; j++) {
-                tiles[i][j] = new Tile(tileSet[map[i][j]], i * TileConstants.TILE_WIDTH_PIXELS, j * TileConstants.TILE_HEIGHT_PIXELS);
+            for (int j = map[i].length - 1; j >= 0; j--) {
+
+                float x = (i * TileConstants.TILE_WIDTH_PIXELS /2.0f ) + (j * TileConstants.TILE_WIDTH_PIXELS / 2.0f);
+                float y = - (i * TileConstants.TILE_HEIGHT_PIXELS / 2.0f) + (j * TileConstants.TILE_HEIGHT_PIXELS /2.0f);
+
+                tiles[i][j] = new Tile(tileSet[map[i][j]], x, y);
             }
         }
     }

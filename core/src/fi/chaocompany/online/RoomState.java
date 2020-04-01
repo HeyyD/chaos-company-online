@@ -9,13 +9,11 @@ import fi.chaocompany.online.map.TileMap;
 
 public class RoomState implements Screen {
 
-    SpriteBatch batch;
-    Texture img;
+    private SpriteBatch batch;
+    private TileMap tileMap;
 
     public RoomState() {
         batch = new SpriteBatch();
-        img = new Texture("badlogic.jpg");
-
         int[][] map = new int[][]{
                 {0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 8},
                 {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 7},
@@ -32,9 +30,7 @@ public class RoomState implements Screen {
         };
 
         Texture texture = new Texture("tileset.png");
-        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Nearest);
-
-        TileMap tileMap = new TileMap(map, texture);
+        this.tileMap = new TileMap(map, texture);
     }
 
     @Override
@@ -45,14 +41,14 @@ public class RoomState implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         batch.begin();
-        batch.draw(img, 0, 0);
+        this.tileMap.drawMap(batch);
         batch.end();
     }
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override
@@ -73,6 +69,5 @@ public class RoomState implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
-        img.dispose();
     }
 }

@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Tile {
 
     private TextureRegion texture;
-    private int x;
-    private int y;
+    private float x;
+    private float y;
 
-    public Tile(TextureRegion texture, int x, int y) {
+    public Tile(TextureRegion texture, float x, float y) {
         this.texture = texture;
         this.x = x;
         this.y = y;
@@ -19,11 +19,11 @@ public class Tile {
         batch.draw(texture, x, y, width, height);
     }
 
-    public int getX() {
+    public float getX() {
         return x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 }
