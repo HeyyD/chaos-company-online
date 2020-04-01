@@ -102,6 +102,9 @@ public class RoomState implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.setProjectionMatrix(this.camera.combined);
+
+        this.player.update();
+
         batch.begin();
         this.tileMap.drawMap(batch);
         this.player.draw(batch);
