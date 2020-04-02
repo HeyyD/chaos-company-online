@@ -12,7 +12,6 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector3;
 import fi.chaocompany.online.map.TileMap;
 import fi.chaocompany.online.player.Player;
-import fi.chaocompany.online.player.PlayerConstants;
 
 public class RoomState implements Screen {
 
