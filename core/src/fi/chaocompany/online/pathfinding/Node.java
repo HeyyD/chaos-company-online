@@ -15,6 +15,8 @@ public abstract class Node {
 
     private boolean isFull;
 
+    public abstract void setNeighbours(List<Node> neighbours);
+
     public Node(Vector2 position) {
         this.parent = null;
         this.position = position;
@@ -47,10 +49,6 @@ public abstract class Node {
 
     public boolean isFull() {
         return isFull;
-    }
-
-    public void setNeighbours(List<Node> neighbours) {
-        this.neighbours = neighbours;
     }
 
     public void setG(int g) {
