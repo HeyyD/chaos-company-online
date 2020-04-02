@@ -45,7 +45,7 @@ public class Player {
     }
 
     public void update() {
-        float speed = 10f;
+        float speed = 5f;
         Vector2 currentPos = new Vector2(this.x, this.y);
         Vector2 targetPos = new Vector2(this.targetX, this.targetY);
         float distance = currentPos.dst(targetPos);
