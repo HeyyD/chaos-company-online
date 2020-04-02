@@ -1,6 +1,5 @@
 package fi.chaocompany.online.map;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,7 +9,6 @@ public class TileMap {
     private static final String LOG_TAG = TileMap.class.getSimpleName();
 
     private Tile[][] tiles;
-    private Tile selectedTile;
 
     public TileMap (int[][] map, Texture texture) {
         TextureRegion[] tileSet = new TextureRegion[TileConstants.TILESET_WIDTH * TileConstants.TILESET_HEIGHT];
