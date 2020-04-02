@@ -28,7 +28,7 @@ public class Player {
         batch.draw(this.sprite, this.x, this.y, PlayerConstants.FRAME_WIDTH_PIXELS, PlayerConstants.FRAME_HEIGHT_PIXELS);
     }
 
-    public void move(float x, float y) {
+    public void moveTo(float x, float y) {
         this.targetX = x;
         this.targetY = y;
     }
