@@ -12,6 +12,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import fi.chaocompany.online.map.Tile;
 import fi.chaocompany.online.map.TileConstants;
 import fi.chaocompany.online.map.TileMap;
 import fi.chaocompany.online.player.Player;
@@ -43,7 +44,12 @@ public class RoomState implements Screen {
             public boolean tap(float x, float y, int count, int button) {
                 // Move player
                 Vector2 cell = screenToCell(x, y);
-                tileMap.selectTile(cell.x, cell.y);
+                try {
+                    Tile tile = tileMap.selectTile(cell.x, cell.y);
+                    player.moveTo(tile.getX(), tile.getY());
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    Gdx.app.error(LOG_TAG, "Tile not selectable");
+                }
                 return false;
             }
         }));
@@ -152,7 +158,7 @@ public class RoomState implements Screen {
         return isoTransform;
     }
 
-    public Vector2 worldToCell(float x, float y) {
+    private Vector2 worldToCell(float x, float y) {
         float halfTileWidth = TileConstants.TILE_WIDTH_PIXELS * 0.5f;
         float halfTileHeight = TileConstants.TILE_HEIGHT_PIXELS * 0.5f;
 
@@ -162,7 +168,7 @@ public class RoomState implements Screen {
         return  new Vector2((int)col,(int)row);
     }
 
-    public Vector2 screenToWorld(float x, float y){
+    private Vector2 screenToWorld(float x, float y){
         Vector3 touch = new Vector3(x,y,0);
         this.camera.unproject(touch);
         touch.mul(getInverseMatrix());
@@ -171,7 +177,7 @@ public class RoomState implements Screen {
     }
 
 
-    public Vector2 screenToCell(float x, float y) {
+    private Vector2 screenToCell(float x, float y) {
         Vector2 world = screenToWorld(x,y);
         world.y -= TileConstants.TILE_HEIGHT_PIXELS * 0.5f;
         return worldToCell(world.x,world.y);

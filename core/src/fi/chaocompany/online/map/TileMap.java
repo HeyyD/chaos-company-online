@@ -42,13 +42,6 @@ public class TileMap {
         for (int x = 0; x < tiles.length; x++) {
             for (int y = tiles[x].length - 1; y >= 0; y--) {
                 Tile tile = tiles[x][y];
-
-                if (tile.equals(this.selectedTile)) {
-                    batch.setColor(1.0f, 0.0f, 0.0f, 1.0f);
-                } else {
-                    batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-                }
-
                 tile.draw(
                         batch,
                         tile.getX(),
@@ -60,7 +53,7 @@ public class TileMap {
         }
     }
 
-    public void selectTile(float x, float y) {
-        this.selectedTile = tiles[(int) x][(int) y];
+    public Tile selectTile(float x, float y) {
+        return tiles[(int) x][(int) y];
     }
 }
