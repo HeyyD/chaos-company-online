@@ -3,6 +3,9 @@ package fi.chaocompany.online.map;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+
+import java.util.Arrays;
 
 public class TileMap {
 
@@ -30,7 +33,13 @@ public class TileMap {
                 float x = (i * TileConstants.TILE_WIDTH_PIXELS /2.0f ) + (j * TileConstants.TILE_WIDTH_PIXELS / 2.0f);
                 float y = - (i * TileConstants.TILE_HEIGHT_PIXELS / 2.0f) + (j * TileConstants.TILE_HEIGHT_PIXELS /2.0f);
 
-                tiles[i][j] = new Tile(tileSet[map[i][j]], x, y);
+                tiles[i][j] = new Tile(tileSet[map[i][j]], x, y, new Vector2(i, j));
+            }
+        }
+
+        for (int i = 0; i < this.tiles.length; i++) {
+            for (int j = this.tiles[i].length - 1; j >= 0; j--) {
+                tiles[i][j].setNeighbours(this.tiles);
             }
         }
     }

@@ -4,6 +4,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import fi.chaocompany.online.map.Tile;
+import fi.chaocompany.online.pathfinding.Node;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class Player {
 
@@ -14,6 +20,8 @@ public class Player {
 
     private float targetX;
     private float targetY;
+
+    private List<Tile> path;
 
     public Player(Texture texture, Vector2 pos) {
         this.sprite = new TextureRegion(texture, 0, 0, PlayerConstants.FRAME_WIDTH_PIXELS, PlayerConstants.FRAME_HEIGHT_PIXELS);
@@ -28,9 +36,12 @@ public class Player {
         batch.draw(this.sprite, this.x, this.y, PlayerConstants.FRAME_WIDTH_PIXELS, PlayerConstants.FRAME_HEIGHT_PIXELS);
     }
 
-    public void moveTo(float x, float y) {
-        this.targetX = x;
-        this.targetY = y;
+    public void move(Collection<Node> path) {
+        this.path = new ArrayList<>();
+        for (Node n: path) {
+            this.path.add((Tile) n);
+        }
+        this.setTargetPosition();
     }
 
     public void update() {
@@ -47,6 +58,25 @@ public class Player {
         } else if (distance != 0) {
             this.x = this.targetX;
             this.y = this.targetY;
+
+            if (this.path.size() > 0) {
+                this.setTargetPosition();
+            }
         }
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    private void setTargetPosition() {
+        Tile targetTile = this.path.remove(0);
+
+        this.targetX = targetTile.getX();
+        this.targetY = targetTile.getY();
     }
 }

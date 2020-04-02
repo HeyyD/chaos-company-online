@@ -2,6 +2,7 @@ package fi.chaocompany.online.pathfinding;
 
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.Collection;
 import java.util.List;
 
 public abstract class Node {
@@ -15,7 +16,7 @@ public abstract class Node {
 
     private boolean isFull;
 
-    public abstract void setNeighbours(List<Node> neighbours);
+    public abstract void setNeighbours(Node[][] nodes);
 
     public Node(Vector2 position) {
         this.parent = null;
@@ -57,6 +58,10 @@ public abstract class Node {
 
     public void setH(int h) {
         this.h = h;
+    }
+
+    public void setNeighbours(List<Node> neighbours) {
+        this.neighbours = neighbours;
     }
 
     public void setFull(boolean full) {

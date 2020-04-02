@@ -1,8 +1,13 @@
 package fi.chaocompany.online.pathfinding;
 
+import com.badlogic.gdx.Gdx;
+
 import java.util.*;
 
 public class Astar {
+
+    public static final String LOG_TAG = Astar.class.getSimpleName();
+
     private List<Node> openSet;
     private Set<Node> closedSet;
 
@@ -48,6 +53,7 @@ public class Astar {
             }
 
         }
+        Gdx.app.error(LOG_TAG, "Could not find path");
         return Collections.emptyList();
     }
 

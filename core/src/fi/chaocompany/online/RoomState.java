@@ -15,7 +15,12 @@ import com.badlogic.gdx.math.Vector3;
 import fi.chaocompany.online.map.Tile;
 import fi.chaocompany.online.map.TileConstants;
 import fi.chaocompany.online.map.TileMap;
+import fi.chaocompany.online.pathfinding.Astar;
+import fi.chaocompany.online.pathfinding.Node;
 import fi.chaocompany.online.player.Player;
+
+import java.util.Collection;
+import java.util.List;
 
 public class RoomState implements Screen {
 
@@ -44,13 +49,20 @@ public class RoomState implements Screen {
             public boolean tap(float x, float y, int count, int button) {
                 // Move player
                 Vector2 cell = screenToCell(x, y);
-                Gdx.app.log(LOG_TAG, cell.toString());
+                Vector2 playerCell = worldToCell(player.getX(), player.getY());
+
                 try {
-                    Tile tile = tileMap.selectTile(cell.x, cell.y);
-                    player.moveTo(tile.getX(), tile.getY());
+                    Tile currentTile = tileMap.selectTile(playerCell.x, playerCell.y);
+                    Tile targetTile = tileMap.selectTile(cell.x, cell.y);
+
+                    Astar astar = new Astar();
+                    Collection<Node> path = astar.findPath(currentTile, targetTile);
+                    player.move(path);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     Gdx.app.error(LOG_TAG, "Tile not selectable");
                 }
+                // player.moveTo(tile.getX(), tile.getY());
+
                 return false;
             }
         }));
