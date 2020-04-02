@@ -33,24 +33,20 @@ public class RoomState implements Screen {
                 Vector3 pos = camera.position;
                 pos.x -= deltaX * panSpeed;
                 pos.y += deltaY * panSpeed;
-
                 camera.position.set(pos);
                 return false;
+            }
+
+            @Override
+            public boolean tap(float x, float y, int count, int button) {
+                // Move player
+                Vector3 point = camera.unproject(new Vector3(x, y, 0));
+                tileMap.selectTile(point.x, point.y);
+                return super.tap(x, y, count, button);
             }
         }));
 
         multiplexer.addProcessor(new InputAdapter() {
-
-            @Override
-            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                // Move player
-                Vector3 point = camera.unproject(new Vector3(screenX, screenY, 0));
-                point.x = point.x - PlayerConstants.FRAME_WIDTH_PIXELS / 2f;
-                point.y = point.y - PlayerConstants.FRAME_HEIGHT_PIXELS / 2f;
-                player.move(point.x, point.y);
-                return super.touchUp(screenX, screenY, pointer, button);
-            }
-
             @Override
             public boolean scrolled(int amount) {
 

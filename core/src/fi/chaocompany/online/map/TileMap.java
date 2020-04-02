@@ -1,10 +1,15 @@
 package fi.chaocompany.online.map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import java.util.logging.Logger;
+
 public class TileMap {
+
+    private static final String LOG_TAG = TileMap.class.getSimpleName();
 
     private Tile[][] tiles;
 
@@ -47,5 +52,9 @@ public class TileMap {
                 );
             }
         }
+    }
+
+    public void selectTile(float x, float y) {
+        Gdx.app.log(LOG_TAG, "HERE");
     }
 }
