@@ -44,6 +44,7 @@ public class RoomState implements Screen {
             public boolean tap(float x, float y, int count, int button) {
                 // Move player
                 Vector2 cell = screenToCell(x, y);
+                Gdx.app.log(LOG_TAG, cell.toString());
                 try {
                     Tile tile = tileMap.selectTile(cell.x, cell.y);
                     player.moveTo(tile.getX(), tile.getY());
@@ -93,7 +94,8 @@ public class RoomState implements Screen {
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false);
 
-        this.player = new Player(new Texture("player/player_1.png"));
+        Tile tile  = this.tileMap.selectTile(7, 3);
+        this.player = new Player(new Texture("player/player_1.png"), new Vector2(tile.getX(), tile.getY()));
     }
 
     @Override

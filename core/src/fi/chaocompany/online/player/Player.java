@@ -15,10 +15,10 @@ public class Player {
     private float targetX;
     private float targetY;
 
-    public Player(Texture texture) {
+    public Player(Texture texture, Vector2 pos) {
         this.sprite = new TextureRegion(texture, 0, 0, PlayerConstants.FRAME_WIDTH_PIXELS, PlayerConstants.FRAME_HEIGHT_PIXELS);
-        this.x = 400;
-        this.y = 5;
+        this.x = pos.x;
+        this.y = pos.y;
 
         this.targetX = this.x;
         this.targetY = this.y;
