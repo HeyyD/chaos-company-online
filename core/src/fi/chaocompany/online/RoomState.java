@@ -20,7 +20,6 @@ import fi.chaocompany.online.pathfinding.Node;
 import fi.chaocompany.online.player.Player;
 
 import java.util.Collection;
-import java.util.List;
 
 public class RoomState implements Screen {
 
@@ -57,7 +56,7 @@ public class RoomState implements Screen {
 
                     Astar astar = new Astar();
                     Collection<Node> path = astar.findPath(currentTile, targetTile);
-                    player.move(path);
+                    player.moveTo(path);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     Gdx.app.error(LOG_TAG, "Tile not selectable");
                 }

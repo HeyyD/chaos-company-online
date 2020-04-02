@@ -39,13 +39,14 @@ public class Player {
         this.animations = initAnimations(texture);
         this.direction = 0;
         this.stateTime = 1f;
+        this.path = new ArrayList<>();
     }
 
     public void draw(SpriteBatch batch) {
         batch.draw(this.sprite, this.x, this.y, PlayerConstants.FRAME_WIDTH_PIXELS, PlayerConstants.FRAME_HEIGHT_PIXELS);
     }
 
-    public void move(Collection<Node> path) {
+    public void moveTo(Collection<Node> path) {
         this.path = new ArrayList<>();
         for (Node n: path) {
             this.path.add((Tile) n);
@@ -56,6 +57,18 @@ public class Player {
     public void update() {
         stateTime += Gdx.graphics.getDeltaTime();
 
+        Vector2 currentPos = new Vector2(this.x, this.y);
+        Vector2 targetPos = new Vector2(this.targetX, this.targetY);
+
+        if (!currentPos.equals(targetPos)) {
+            this.move();
+            this.sprite = this.animations.get(direction).getKeyFrame(stateTime, true);
+        } else {
+            this.sprite = this.animations.get(direction).getKeyFrames()[0];
+        }
+    }
+
+    private void move() {
         float speed = 5f;
         Vector2 currentPos = new Vector2(this.x, this.y);
         Vector2 targetPos = new Vector2(this.targetX, this.targetY);
@@ -77,16 +90,14 @@ public class Player {
         if (distance >= 5f) {
             this.x = currentPos.x + velocity.x;
             this.y = currentPos.y + velocity.y;
-            this.sprite = this.animations.get(direction).getKeyFrame(stateTime, true);
         } else if (distance != 0) {
             this.x = this.targetX;
             this.y = this.targetY;
-
-            this.sprite = this.animations.get(direction).getKeyFrame(0, true);
             if (this.path.size() > 0) {
                 this.setTargetPosition();
             }
         }
+
     }
 
     public float getX() {
