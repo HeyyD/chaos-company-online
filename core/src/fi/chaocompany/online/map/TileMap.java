@@ -5,13 +5,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import java.util.logging.Logger;
-
 public class TileMap {
 
     private static final String LOG_TAG = TileMap.class.getSimpleName();
 
     private Tile[][] tiles;
+    private Tile selectedTile;
 
     public TileMap (int[][] map, Texture texture) {
         TextureRegion[] tileSet = new TextureRegion[TileConstants.TILESET_WIDTH * TileConstants.TILESET_HEIGHT];
@@ -43,6 +42,13 @@ public class TileMap {
         for (int x = 0; x < tiles.length; x++) {
             for (int y = tiles[x].length - 1; y >= 0; y--) {
                 Tile tile = tiles[x][y];
+
+                if (tile.equals(this.selectedTile)) {
+                    batch.setColor(1.0f, 0.0f, 0.0f, 1.0f);
+                } else {
+                    batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+                }
+
                 tile.draw(
                         batch,
                         tile.getX(),
@@ -55,6 +61,6 @@ public class TileMap {
     }
 
     public void selectTile(float x, float y) {
-        Gdx.app.log(LOG_TAG, "HERE");
+        this.selectedTile = tiles[(int) x][(int) y];
     }
 }
