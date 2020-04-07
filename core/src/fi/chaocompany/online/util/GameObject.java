@@ -2,6 +2,7 @@ package fi.chaocompany.online.util;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 public abstract class GameObject {
 
@@ -13,8 +14,11 @@ public abstract class GameObject {
     protected abstract TextureRegion initSprite(Texture texture);
     protected abstract void update();
 
-    public GameObject(Texture texture) {
+    public GameObject(Texture texture, Vector2 pos) {
         this.sprite = this.initSprite(texture);
+
+        this.x = pos.x;
+        this.y = pos.y;
     }
 
     public TextureRegion getSprite() {
@@ -23,6 +27,14 @@ public abstract class GameObject {
 
     public void setSprite(TextureRegion sprite) {
         this.sprite = sprite;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
     }
 
     public float getX() {
