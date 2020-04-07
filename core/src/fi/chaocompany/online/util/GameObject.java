@@ -1,6 +1,7 @@
 package fi.chaocompany.online.util;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -19,6 +20,10 @@ public abstract class GameObject {
 
         this.x = pos.x;
         this.y = pos.y;
+    }
+
+    public void draw(SpriteBatch batch) {
+        batch.draw(getSprite(), getX(), getY(), getSprite().getRegionWidth(), getSprite().getRegionHeight());
     }
 
     public TextureRegion getSprite() {

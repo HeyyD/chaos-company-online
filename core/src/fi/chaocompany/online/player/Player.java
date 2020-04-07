@@ -36,10 +36,6 @@ public class Player extends GameObject {
         this.path = new ArrayList<>();
     }
 
-    public void draw(SpriteBatch batch) {
-        batch.draw(getSprite(), getX(), getY(), PlayerConstants.FRAME_WIDTH_PIXELS, PlayerConstants.FRAME_HEIGHT_PIXELS);
-    }
-
     public void moveTo(Collection<Node> path) {
         this.path = new ArrayList<>();
         for (Node n: path) {
