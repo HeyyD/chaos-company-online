@@ -24,8 +24,8 @@ public class Player extends GameObject {
     private Map<Integer, Animation<TextureRegion>> animations;
     private float stateTime;
 
-    public Player(Texture texture, Vector2 pos) {
-        super(texture, pos);
+    public Player(Texture texture, Vector2 pos, List<GameObject> objects) {
+        super(texture, pos, objects);
 
         this.targetX = getX();
         this.targetY = getY();

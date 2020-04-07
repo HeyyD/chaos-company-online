@@ -18,12 +18,17 @@ import fi.chaocompany.online.map.TileMap;
 import fi.chaocompany.online.pathfinding.Astar;
 import fi.chaocompany.online.pathfinding.Node;
 import fi.chaocompany.online.player.Player;
+import fi.chaocompany.online.util.GameObject;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class RoomState implements Screen {
 
     private static final String LOG_TAG = RoomState.class.getSimpleName();
+
+    private List<GameObject> objects = new ArrayList<>();
 
     private SpriteBatch batch;
     private TileMap tileMap;
@@ -60,7 +65,6 @@ public class RoomState implements Screen {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     Gdx.app.error(LOG_TAG, "Tile not selectable");
                 }
-                // player.moveTo(tile.getX(), tile.getY());
 
                 return false;
             }
@@ -106,7 +110,7 @@ public class RoomState implements Screen {
         this.camera.setToOrtho(false);
 
         Tile tile  = this.tileMap.selectTile(7, 3);
-        this.player = new Player(new Texture("player/player_1.png"), new Vector2(tile.getX(), tile.getY()));
+        this.player = new Player(new Texture("player/player_1.png"), new Vector2(tile.getX(), tile.getY()), objects);
     }
 
     @Override
@@ -124,7 +128,9 @@ public class RoomState implements Screen {
 
         batch.begin();
         this.tileMap.drawMap(batch);
-        this.player.draw(batch);
+        for (GameObject o: this.objects) {
+            o.draw(batch);
+        }
         batch.end();
 
         this.camera.update();

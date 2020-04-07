@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.List;
+
 public abstract class GameObject {
 
     private TextureRegion sprite;
@@ -15,11 +17,13 @@ public abstract class GameObject {
     protected abstract TextureRegion initSprite(Texture texture);
     protected abstract void update();
 
-    public GameObject(Texture texture, Vector2 pos) {
+    public GameObject(Texture texture, Vector2 pos, List<GameObject> objects) {
         this.sprite = this.initSprite(texture);
 
         this.x = pos.x;
         this.y = pos.y;
+
+        objects.add(this);
     }
 
     public void draw(SpriteBatch batch) {
