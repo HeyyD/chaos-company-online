@@ -1,4 +1,4 @@
-package fi.chaocompany.online;
+package fi.chaocompany.online.state;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
