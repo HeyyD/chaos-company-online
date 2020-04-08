@@ -34,7 +34,6 @@ public class WebSocket {
                 session = stompSession;
                 listeners.forEach(OnConnectListener::onConnect);
 
-                stompSession.subscribe("/position", this);
                 stompSession.send("/controls/move", new Message("Hello world"));
             }
 
@@ -50,14 +49,11 @@ public class WebSocket {
 
             @Override
             public Type getPayloadType(StompHeaders stompHeaders) {
-                return Message.class;
+                return null;
             }
 
             @Override
-            public void handleFrame(StompHeaders stompHeaders, Object o) {
-                String msg = ((Message) o).getMsg();
-                Gdx.app.log(LOG_TAG, "Received : " + msg);
-            }
+            public void handleFrame(StompHeaders stompHeaders, Object o) { }
         };
 
         stompClient.connect("ws://localhost:8080/chaos-company", sessionHandler);
