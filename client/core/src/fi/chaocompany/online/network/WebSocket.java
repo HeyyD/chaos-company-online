@@ -11,7 +11,6 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import java.lang.reflect.Type;
-import java.util.Scanner;
 
 public class WebSocket {
 
@@ -54,8 +53,7 @@ public class WebSocket {
             }
         };
 
-        stompClient.connect("ws://localhost:8080", sessionHandler);
-        new Scanner(System.in).nextLine();
+        stompClient.connect("ws://localhost:8080/chaos-company", sessionHandler);
     }
 
     public static WebSocket getInstance() {
