@@ -128,9 +128,9 @@ public class RoomState implements Screen {
 
         batch.begin();
         this.tileMap.drawMap(batch);
-        for (GameObject o: this.objects) {
+        this.objects.forEach(o -> {
             o.draw(batch);
-        }
+        });
         batch.end();
 
         this.camera.update();
