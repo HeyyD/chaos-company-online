@@ -10,8 +10,8 @@ import org.springframework.stereotype.Controller;
 public class MessageController {
     Logger logger = LoggerFactory.getLogger(MessageController.class);
 
-    @MessageMapping("/messages")
-    @SendTo("/messages")
+    @MessageMapping("/move")
+    @SendTo("/position")
     public Message send(Message message) {
         logger.info("Received: " + message.getMsg());
         return new Message("Greetings");

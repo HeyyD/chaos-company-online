@@ -27,8 +27,8 @@ public class WebSocket {
             @Override
             public void afterConnected(StompSession stompSession, StompHeaders stompHeaders) {
                 Gdx.app.log(LOG_TAG, "CONNECTED");
-                stompSession.subscribe("/messages", this);
-                stompSession.send("/app/messages", new Message("Hello world"));
+                stompSession.subscribe("/position", this);
+                stompSession.send("/controls/move", new Message("Hello world"));
             }
 
             @Override
