@@ -33,8 +33,6 @@ public class WebSocket {
 
                 session = stompSession;
                 listeners.forEach(OnConnectListener::onConnect);
-
-                stompSession.send("/controls/move", new Message("Hello world"));
             }
 
             @Override
@@ -66,6 +64,10 @@ public class WebSocket {
 
     public void unRegisterOnConnectListener(OnConnectListener listener) {
         listeners.remove(listener);
+    }
+
+    public void send(String destination, Object message) {
+        this.session.send(destination, message);
     }
 
     public StompSession.Subscription subscribe(String destination, StompFrameHandler handler) {

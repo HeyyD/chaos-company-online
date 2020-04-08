@@ -18,7 +18,7 @@ public class Main extends Game {
 	public void create () {
 		WebSocket socket = WebSocket.getInstance();
 		socket.registerOnConnectListener(() -> {
-			socket.subscribe("/position", new StompFrameHandler() {
+			socket.subscribe("/map", new StompFrameHandler() {
 				@Override
 				public Type getPayloadType(StompHeaders stompHeaders) {
 					return Message.class;
@@ -30,6 +30,7 @@ public class Main extends Game {
 					Gdx.app.log(LOG_TAG, "Received : " + msg);
 				}
 			});
+			socket.send("/game/map", new Message("Hello world"));
 
 			Gdx.app.postRunnable(() -> {
 				setScreen(new RoomState());
