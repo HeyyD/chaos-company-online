@@ -27,29 +27,29 @@ public class WebSocket {
             @Override
             public void afterConnected(StompSession stompSession, StompHeaders stompHeaders) {
                 Gdx.app.log(LOG_TAG, "CONNECTED");
-                // stompSession.subscribe("/topic/messages", this);
-                // stompSession.send("/app/chat", "Hello world!");
+                stompSession.subscribe("/messages", this);
+                stompSession.send("/app/messages", new Message("Hello world"));
             }
 
             @Override
             public void handleException(StompSession stompSession, StompCommand stompCommand, StompHeaders stompHeaders, byte[] bytes, Throwable throwable) {
-
+                throwable.printStackTrace();
             }
 
             @Override
             public void handleTransportError(StompSession stompSession, Throwable throwable) {
-
+                Gdx.app.log(LOG_TAG, "TRANSPORT ERROR");
             }
 
             @Override
             public Type getPayloadType(StompHeaders stompHeaders) {
-                return null;
+                return Message.class;
             }
 
             @Override
             public void handleFrame(StompHeaders stompHeaders, Object o) {
-                // String msg = (String) o;
-                // Gdx.app.log(LOG_TAG, "Received : " + msg);
+                String msg = ((Message) o).getMsg();
+                Gdx.app.log(LOG_TAG, "Received : " + msg);
             }
         };
 
