@@ -76,6 +76,6 @@ project(":core") {
         compile 'org.springframework:spring-websocket:5.2.5.RELEASE'
         compile 'org.springframework:spring-messaging:5.2.5.RELEASE'
         compile 'org.springframework.boot:spring-boot-starter-websocket:2.2.6.RELEASE'
-
+        compile 'org.apache.httpcomponents:httpclient:4.3.6'
     }
 }

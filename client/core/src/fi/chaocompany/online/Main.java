@@ -1,14 +1,8 @@
 package fi.chaocompany.online;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import fi.chaocompany.online.network.MapMessage;
-import fi.chaocompany.online.network.WebSocket;
+import fi.chaocompany.online.network.Http;
 import fi.chaocompany.online.state.RoomState;
-import org.springframework.messaging.simp.stomp.StompFrameHandler;
-import org.springframework.messaging.simp.stomp.StompHeaders;
-
-import java.lang.reflect.Type;
 
 public class Main extends Game {
 
@@ -16,6 +10,30 @@ public class Main extends Game {
 
 	@Override
 	public void create () {
+		int[][] map = new int[][]{
+				{0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 8},
+				{1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 7},
+				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
+				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
+				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
+				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
+				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
+				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
+				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
+				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
+				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 6},
+				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 0}
+		};
+
+		Http http = new Http();
+		try {
+			http.get();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		setScreen(new RoomState(map));
+		/*
 		WebSocket socket = WebSocket.getInstance();
 		socket.registerOnConnectListener(() -> {
 			socket.subscribe("/map", new StompFrameHandler() {
@@ -34,6 +52,7 @@ public class Main extends Game {
 			});
 			socket.send("/game/map", new MapMessage());
 		});
+		 */
 	}
 
 	@Override
