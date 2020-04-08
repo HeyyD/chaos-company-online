@@ -1,8 +1,13 @@
 package fi.chaocompany.online;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import fi.chaocompany.online.network.Http;
 import fi.chaocompany.online.state.RoomState;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.util.EntityUtils;
 
 public class Main extends Game {
 
@@ -27,7 +32,20 @@ public class Main extends Game {
 
 		Http http = new Http();
 		try {
-			http.get();
+			http.get("http://localhost:8080/map", (ResponseHandler<String>) response -> {
+				int status = response.getStatusLine().getStatusCode();
+				if (status >= 200 && status < 300) {
+					HttpEntity entity = response.getEntity();
+					if (entity != null) {
+						String string = EntityUtils.toString(entity);
+						Gdx.app.log(LOG_TAG, string);
+						return string;
+					}
+					return null;
+				} else {
+					throw new ClientProtocolException("Unexpected response status: " + status);
+				}
+			});
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
