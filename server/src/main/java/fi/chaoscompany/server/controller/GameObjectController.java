@@ -24,10 +24,17 @@ public class GameObjectController {
 
     @MessageMapping("/object")
     @SendTo("/object")
-    public GameObject addGameObject(GameObject gameObject) throws Exception {
+    public GameObject addGameObject(GameObject gameObject) {
         gameObject.setId(currentId);
         currentId++;
         this.objects.put(gameObject.getId(), gameObject);
         return gameObject;
+    }
+
+    @MessageMapping("/delete")
+    @SendTo("/delete")
+    public int deleteGameObject(int key) {
+        this.objects.remove(key);
+        return key;
     }
 }

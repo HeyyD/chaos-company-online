@@ -1,9 +1,6 @@
 package fi.chaocompany.online.state;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -68,6 +65,19 @@ public class RoomState implements Screen {
             }
         });
 
+        WebSocket.getInstance().subscribe("/delete", new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders stompHeaders) {
+                return Integer.class;
+            }
+
+            @Override
+            public void handleFrame(StompHeaders stompHeaders, Object o) {
+                int key = (int) o;
+                objects.remove(key);
+            }
+        });
+
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(new GestureDetector(new GestureDetector.GestureAdapter() {
             @Override
@@ -114,6 +124,20 @@ public class RoomState implements Screen {
                     camera.zoom = zoomAmount;
                 }
                 return super.scrolled(amount);
+            }
+
+            @Override
+            public boolean keyUp(int keycode) {
+                Gdx.app.log(LOG_TAG, "EXIT");
+                if (keycode == Input.Keys.ESCAPE) {
+                    for (Map.Entry<Integer, GameObject> entry : objects.entrySet()) {
+                        if (entry.getValue().equals(player)) {
+                            WebSocket.getInstance().send("/game/delete", entry.getKey());
+                        }
+                    }
+                    Gdx.app.exit();
+                }
+                return super.keyUp(keycode);
             }
         });
         Gdx.input.setInputProcessor(multiplexer);
@@ -167,7 +191,6 @@ public class RoomState implements Screen {
 
     @Override
     public void hide() {
-
     }
 
     @Override
