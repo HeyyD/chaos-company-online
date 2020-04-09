@@ -66,6 +66,6 @@ public abstract class GameObject {
         String path = ((FileTextureData)texture.getTextureData()).getFileHandle().path();
         String clazz = getClass().getName();
 
-        WebSocket.getInstance().send("/game/object", new ServerGameObject(getX(), getY(), path, clazz));
+        WebSocket.getInstance().send("/game/object/add", new ServerGameObject(getX(), getY(), path, clazz));
     }
 }

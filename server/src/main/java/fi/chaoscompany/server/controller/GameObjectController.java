@@ -22,7 +22,7 @@ public class GameObjectController {
         return this.objects;
     }
 
-    @MessageMapping("/object")
+    @MessageMapping("/object/add")
     @SendTo("/object")
     public GameObject addGameObject(GameObject gameObject) {
         gameObject.setId(currentId);
