@@ -35,7 +35,7 @@ public class RoomState implements Screen {
     private OrthographicCamera camera;
     private Player player;
 
-    public RoomState() {
+    public RoomState(int[][] map) {
         // Set camera controls
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(new GestureDetector(new GestureDetector.GestureAdapter() {
@@ -88,20 +88,6 @@ public class RoomState implements Screen {
         Gdx.input.setInputProcessor(multiplexer);
 
         batch = new SpriteBatch();
-        int[][] map = new int[][]{
-                {0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 8},
-                {1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 7},
-                {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
-                {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
-                {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
-                {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
-                {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
-                {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
-                {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
-                {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
-                {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 6},
-                {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 0}
-        };
 
         Texture texture = new Texture("tileset.png");
         this.tileMap = new TileMap(map, texture);
