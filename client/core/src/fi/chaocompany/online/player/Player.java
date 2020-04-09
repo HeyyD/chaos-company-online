@@ -34,8 +34,8 @@ public class Player extends GameObject {
         this.path = new ArrayList<>();
     }
 
-    public Player(Texture texture, Vector2 pos, Map<Integer, GameObject> objects) {
-        super(texture, pos, objects);
+    public Player(Texture texture, Vector2 pos) {
+        super(texture, pos);
     }
 
     public void moveTo(Collection<Node> path) {

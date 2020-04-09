@@ -8,8 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 import fi.chaocompany.online.network.WebSocket;
 import fi.chaocompany.online.network.models.ServerGameObject;
 
-import java.util.Map;
-
 public abstract class GameObject {
 
     private static final String LOG_TAG = GameObject.class.getSimpleName();
@@ -20,7 +18,7 @@ public abstract class GameObject {
     private float y;
 
     protected abstract TextureRegion initSprite(Texture texture);
-    protected abstract void update();
+    public abstract void update();
 
     public GameObject(Texture texture, float x, float y) {
         this.sprite = this.initSprite(texture);
@@ -28,7 +26,7 @@ public abstract class GameObject {
         this.y = y;
     }
 
-    public GameObject(Texture texture, Vector2 pos, Map<Integer, GameObject> objects) {
+    public GameObject(Texture texture, Vector2 pos) {
         this.x = pos.x;
         this.y = pos.y;
 

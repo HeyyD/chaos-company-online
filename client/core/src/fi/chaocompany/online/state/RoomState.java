@@ -62,6 +62,12 @@ public class RoomState implements Screen {
                         try {
                             GameObject gameObject = (GameObject) constructor.newInstance(new Texture(object.getTexture()), object.getX(), object.getY());
                             objects.put(objects.size(), gameObject);
+
+                            // Set the player object
+                            if (gameObject instanceof Player && object.getSessionId().equals(WebSocket.getInstance().getId())) {
+                                player = (Player) gameObject;
+                            }
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -131,7 +137,7 @@ public class RoomState implements Screen {
         this.camera.setToOrtho(false);
 
         Tile tile  = this.tileMap.selectTile(7, 3);
-        this.player = new Player(new Texture("player/player_1.png"), new Vector2(tile.getX(), tile.getY()), this.objects);
+        new Player(new Texture("player/player_1.png"), new Vector2(tile.getX(), tile.getY()));
     }
 
     @Override
@@ -147,6 +153,7 @@ public class RoomState implements Screen {
         batch.begin();
         this.tileMap.drawMap(batch);
         this.objects.values().forEach(o -> {
+            o.update();
             o.draw(batch);
         });
         batch.end();

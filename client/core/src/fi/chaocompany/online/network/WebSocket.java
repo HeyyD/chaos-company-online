@@ -62,6 +62,10 @@ public class WebSocket {
         return listener;
     }
 
+    public String getId() {
+        return this.session.getSessionId();
+    }
+
     public void unRegisterOnConnectListener(OnConnectListener listener) {
         listeners.remove(listener);
     }

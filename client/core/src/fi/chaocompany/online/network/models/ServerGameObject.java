@@ -1,6 +1,9 @@
 package fi.chaocompany.online.network.models;
 
+import fi.chaocompany.online.network.WebSocket;
+
 public class ServerGameObject {
+    private String sessionId;
     private String texture;
     private String clazz;
 
@@ -15,6 +18,8 @@ public class ServerGameObject {
         this.y = y;
         this.texture = texture;
         this.clazz = clazz;
+
+        this.sessionId = WebSocket.getInstance().getId();
     }
 
     public float getX() {
@@ -47,5 +52,13 @@ public class ServerGameObject {
 
     public void setClazz(String clazz) {
         this.clazz = clazz;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 }
