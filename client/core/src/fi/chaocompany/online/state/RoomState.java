@@ -53,23 +53,18 @@ public class RoomState implements Screen {
             @Override
             public void handleFrame(StompHeaders stompHeaders, Object o) {
                 ServerGameObject object = (ServerGameObject) o;
-                try {
-                    Gdx.app.postRunnable(() -> {
-                        try {
-                            GameObject gameObject = ((ServerGameObject) o).toGameObject();
-                            objects.put(objects.size(), gameObject);
-                            // Set the player object
-                            if (gameObject instanceof Player && object.getSessionId().equals(WebSocket.getInstance().getId())) {
-                                player = (Player) gameObject;
-                            }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                Gdx.app.postRunnable(() -> {
+                    try {
+                        GameObject gameObject = ((ServerGameObject) o).toGameObject();
+                        objects.put(objects.size(), gameObject);
+                        // Set the player object
+                        if (gameObject instanceof Player && object.getSessionId().equals(WebSocket.getInstance().getId())) {
+                            player = (Player) gameObject;
                         }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
             }
         });
 
