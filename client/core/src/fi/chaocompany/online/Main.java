@@ -25,7 +25,6 @@ public class Main extends Game {
 	private static final String api = "http://localhost:8080/api";
 
 	private int[][] map;
-	private Map<Integer, ServerGameObject> serverObjects;
 	private Map<Integer, GameObject> objects = new HashMap<>();
 
 	@Override
@@ -63,20 +62,26 @@ public class Main extends Game {
 	private void loadObjects() {
 		Http http = new Http();
 		try {
-			http.get(api + "/game", (ResponseHandler<Map<Integer, ServerGameObject>>) response -> {
+			http.get(api + "/game", (ResponseHandler<Map<Integer, GameObject>>) response -> {
 				int status = response.getStatusLine().getStatusCode();
 				if (status >= 200 && status < 300) {
 					HttpEntity entity = response.getEntity();
 					if (entity != null) {
 						String string = EntityUtils.toString(entity);
 						LinkedTreeMap<String, Object> temp = new Gson().fromJson(string, LinkedTreeMap.class);
-						Map<Integer, ServerGameObject> map = new HashMap<>();
+						Map<Integer, GameObject> map = new HashMap<>();
 						temp.forEach((key, value) -> {
-							Gson gson = new Gson();
-							Gdx.app.log(LOG_TAG, value.toString());
-							map.put(Integer.parseInt(key), gson.fromJson(value.toString(), ServerGameObject.class));
+							Gdx.app.postRunnable(() -> {
+								Gson gson = new Gson();
+								ServerGameObject o = gson.fromJson(value.toString(), ServerGameObject.class);
+								try {
+									map.put(Integer.parseInt(key), o.toGameObject());
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							});
 						});
-						this.serverObjects = map;
+						this.objects = map;
 						return map;
 					}
 					return null;
@@ -113,6 +118,6 @@ public class Main extends Game {
 	}
 
 	private boolean isLoading() {
-		return this.map == null || this.serverObjects == null;
+		return this.map == null || this.objects == null;
 	}
 }
