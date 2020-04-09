@@ -1,4 +1,4 @@
-package fi.chaoscompany.server.controller;
+package fi.chaoscompany.server.models;
 
 public class MapMessage {
     int[][] map;
