@@ -23,20 +23,23 @@ import fi.chaocompany.online.util.GameObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class RoomState implements Screen {
 
     private static final String LOG_TAG = RoomState.class.getSimpleName();
 
-    private List<GameObject> objects = new ArrayList<>();
+    private Map<Integer, GameObject> objects;
 
     private SpriteBatch batch;
     private TileMap tileMap;
     private OrthographicCamera camera;
     private Player player;
 
-    public RoomState(int[][] map) {
+    public RoomState(int[][] map, Map<Integer, GameObject> objects) {
         // Set camera controls
+        this.objects = objects;
+
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(new GestureDetector(new GestureDetector.GestureAdapter() {
             @Override
@@ -96,7 +99,7 @@ public class RoomState implements Screen {
         this.camera.setToOrtho(false);
 
         Tile tile  = this.tileMap.selectTile(7, 3);
-        this.player = new Player(new Texture("player/player_1.png"), new Vector2(tile.getX(), tile.getY()), objects);
+        this.player = new Player(new Texture("player/player_1.png"), new Vector2(tile.getX(), tile.getY()), this.objects);
     }
 
     @Override
@@ -114,7 +117,7 @@ public class RoomState implements Screen {
 
         batch.begin();
         this.tileMap.drawMap(batch);
-        this.objects.forEach(o -> {
+        this.objects.values().forEach(o -> {
             o.draw(batch);
         });
         batch.end();
