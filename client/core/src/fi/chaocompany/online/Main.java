@@ -3,9 +3,11 @@ package fi.chaocompany.online;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import fi.chaocompany.online.network.Http;
 import fi.chaocompany.online.network.MapMessage;
 import fi.chaocompany.online.network.WebSocket;
+import fi.chaocompany.online.network.models.ServerGameObject;
 import fi.chaocompany.online.state.RoomState;
 import fi.chaocompany.online.util.GameObject;
 import org.apache.http.HttpEntity;
@@ -13,6 +15,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.util.EntityUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Main extends Game {
@@ -22,7 +25,8 @@ public class Main extends Game {
 	private static final String api = "http://localhost:8080/api";
 
 	private int[][] map;
-	private Map<Integer, GameObject> objects;
+	private Map<Integer, ServerGameObject> serverObjects;
+	private Map<Integer, GameObject> objects = new HashMap<>();
 
 	@Override
 	public void create () {
@@ -59,14 +63,20 @@ public class Main extends Game {
 	private void loadObjects() {
 		Http http = new Http();
 		try {
-			http.get(api + "/game", (ResponseHandler<Map<Integer, GameObject>>) response -> {
+			http.get(api + "/game", (ResponseHandler<Map<Integer, ServerGameObject>>) response -> {
 				int status = response.getStatusLine().getStatusCode();
 				if (status >= 200 && status < 300) {
 					HttpEntity entity = response.getEntity();
 					if (entity != null) {
 						String string = EntityUtils.toString(entity);
-						Map map = new Gson().fromJson(string, Map.class);
-						this.objects = map;
+						LinkedTreeMap<String, Object> temp = new Gson().fromJson(string, LinkedTreeMap.class);
+						Map<Integer, ServerGameObject> map = new HashMap<>();
+						temp.forEach((key, value) -> {
+							Gson gson = new Gson();
+							Gdx.app.log(LOG_TAG, value.toString());
+							map.put(Integer.parseInt(key), gson.fromJson(value.toString(), ServerGameObject.class));
+						});
+						this.serverObjects = map;
 						return map;
 					}
 					return null;
@@ -103,6 +113,6 @@ public class Main extends Game {
 	}
 
 	private boolean isLoading() {
-		return this.map == null || this.objects == null;
+		return this.map == null || this.serverObjects == null;
 	}
 }
