@@ -24,7 +24,6 @@ import fi.chaocompany.online.util.GameObject;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
@@ -55,14 +54,10 @@ public class RoomState implements Screen {
             public void handleFrame(StompHeaders stompHeaders, Object o) {
                 ServerGameObject object = (ServerGameObject) o;
                 try {
-                    Class<?> c = Class.forName(object.getClazz());
-                    Constructor<?> constructor = c.getConstructor(Texture.class, float.class, float.class);
-
                     Gdx.app.postRunnable(() -> {
                         try {
-                            GameObject gameObject = (GameObject) constructor.newInstance(new Texture(object.getTexture()), object.getX(), object.getY());
+                            GameObject gameObject = ((ServerGameObject) o).toGameObject();
                             objects.put(objects.size(), gameObject);
-
                             // Set the player object
                             if (gameObject instanceof Player && object.getSessionId().equals(WebSocket.getInstance().getId())) {
                                 player = (Player) gameObject;

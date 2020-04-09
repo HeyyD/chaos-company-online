@@ -1,6 +1,11 @@
 package fi.chaocompany.online.network.models;
 
+import com.badlogic.gdx.graphics.Texture;
 import fi.chaocompany.online.network.WebSocket;
+import fi.chaocompany.online.util.GameObject;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public class ServerGameObject {
     private String sessionId;
@@ -60,5 +65,11 @@ public class ServerGameObject {
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public GameObject toGameObject() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Class<?> c = Class.forName(this.getClazz());
+        Constructor<?> constructor = c.getConstructor(Texture.class, float.class, float.class);
+        return (GameObject) constructor.newInstance(new Texture(this.getTexture()), this.getX(), this.getY());
     }
 }
