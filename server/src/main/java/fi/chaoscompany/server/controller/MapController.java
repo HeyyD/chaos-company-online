@@ -3,10 +3,12 @@ package fi.chaoscompany.server.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+@Controller
 @RestController
 @RequestMapping(value = "/api/map")
 public class MapController {
@@ -28,7 +30,7 @@ public class MapController {
     };
 
     @RequestMapping(method = RequestMethod.GET)
-    public MapMessage saveBlogPost() {
+    public MapMessage getMap() {
         return new MapMessage(map);
     }
 }
