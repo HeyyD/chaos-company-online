@@ -15,14 +15,17 @@ import com.badlogic.gdx.math.Vector3;
 import fi.chaocompany.online.map.Tile;
 import fi.chaocompany.online.map.TileConstants;
 import fi.chaocompany.online.map.TileMap;
+import fi.chaocompany.online.network.WebSocket;
+import fi.chaocompany.online.network.models.ServerGameObject;
 import fi.chaocompany.online.pathfinding.Astar;
 import fi.chaocompany.online.pathfinding.Node;
 import fi.chaocompany.online.player.Player;
 import fi.chaocompany.online.util.GameObject;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
 
-import java.util.ArrayList;
+import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 public class RoomState implements Screen {
@@ -39,6 +42,19 @@ public class RoomState implements Screen {
     public RoomState(int[][] map, Map<Integer, GameObject> objects) {
         // Set camera controls
         this.objects = objects;
+
+        // Start listening to websocket messages
+        WebSocket.getInstance().subscribe("/object", new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders stompHeaders) {
+                return ServerGameObject.class;
+            }
+
+            @Override
+            public void handleFrame(StompHeaders stompHeaders, Object o) {
+                Gdx.app.log(LOG_TAG, "RECEIVED GAME OBJECT");
+            }
+        });
 
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(new GestureDetector(new GestureDetector.GestureAdapter() {

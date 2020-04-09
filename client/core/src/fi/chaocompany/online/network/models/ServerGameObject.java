@@ -1,16 +1,16 @@
-package fi.chaoscompany.server.models;
+package fi.chaocompany.online.network.models;
 
-public class GameObject {
+public class ServerGameObject {
     private String texture;
     private String clazz;
 
     private float x;
     private float y;
 
-    public GameObject() {
+    public ServerGameObject() {
     }
 
-    public GameObject(float x, float y, String texture, String clazz) {
+    public ServerGameObject(float x, float y, String texture, String clazz) {
         this.x = x;
         this.y = y;
         this.texture = texture;
