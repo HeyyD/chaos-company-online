@@ -1,8 +1,9 @@
 package fi.chaocompany.online;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
+import com.google.gson.Gson;
 import fi.chaocompany.online.network.Http;
+import fi.chaocompany.online.network.MapMessage;
 import fi.chaocompany.online.state.RoomState;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
@@ -15,21 +16,6 @@ public class Main extends Game {
 
 	@Override
 	public void create () {
-		int[][] map = new int[][]{
-				{0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 8},
-				{1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 7},
-				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
-				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
-				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
-				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
-				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
-				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
-				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
-				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 7},
-				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 9, 6},
-				{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 0}
-		};
-
 		Http http = new Http();
 		try {
 			http.get("http://localhost:8080/map", (ResponseHandler<String>) response -> {
@@ -38,7 +24,8 @@ public class Main extends Game {
 					HttpEntity entity = response.getEntity();
 					if (entity != null) {
 						String string = EntityUtils.toString(entity);
-						Gdx.app.log(LOG_TAG, string);
+						MapMessage map = new Gson().fromJson(string, MapMessage.class);
+						setScreen(new RoomState(map.getMap()));
 						return string;
 					}
 					return null;
@@ -49,8 +36,6 @@ public class Main extends Game {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		setScreen(new RoomState(map));
 		/*
 		WebSocket socket = WebSocket.getInstance();
 		socket.registerOnConnectListener(() -> {

@@ -28,7 +28,7 @@ public class MapController {
     };
 
     @RequestMapping(method = RequestMethod.GET)
-    public String saveBlogPost() {
-        return "Hello World!";
+    public MapMessage saveBlogPost() {
+        return new MapMessage(map);
     }
 }
