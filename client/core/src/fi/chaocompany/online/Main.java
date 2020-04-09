@@ -1,9 +1,11 @@
 package fi.chaocompany.online;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.google.gson.Gson;
 import fi.chaocompany.online.network.Http;
 import fi.chaocompany.online.network.MapMessage;
+import fi.chaocompany.online.network.WebSocket;
 import fi.chaocompany.online.state.RoomState;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
@@ -18,6 +20,20 @@ public class Main extends Game {
 
 	@Override
 	public void create () {
+		WebSocket socket = WebSocket.getInstance();
+		socket.registerOnConnectListener(this::loadMap);
+	}
+
+	@Override
+	public void render () {
+		super.render();
+	}
+	
+	@Override
+	public void dispose () {
+	}
+
+	private void loadMap() {
 		Http http = new Http();
 		try {
 			http.get(api + "/map", (ResponseHandler<MapMessage>) response -> {
@@ -27,7 +43,9 @@ public class Main extends Game {
 					if (entity != null) {
 						String string = EntityUtils.toString(entity);
 						MapMessage map = new Gson().fromJson(string, MapMessage.class);
-						setScreen(new RoomState(map.getMap()));
+						Gdx.app.postRunnable(() -> {
+							setScreen(new RoomState(map.getMap()));
+						});
 						return map;
 					}
 					return null;
@@ -38,34 +56,5 @@ public class Main extends Game {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		/*
-		WebSocket socket = WebSocket.getInstance();
-		socket.registerOnConnectListener(() -> {
-			socket.subscribe("/map", new StompFrameHandler() {
-				@Override
-				public Type getPayloadType(StompHeaders stompHeaders) {
-					return MapMessage.class;
-				}
-
-				@Override
-				public void handleFrame(StompHeaders stompHeaders, Object o) {
-					int[][] map = ((MapMessage) o).getMap();
-					Gdx.app.postRunnable(() -> {
-						setScreen(new RoomState(map));
-					});
-				}
-			});
-			socket.send("/game/map", new MapMessage());
-		});
-		 */
-	}
-
-	@Override
-	public void render () {
-		super.render();
-	}
-	
-	@Override
-	public void dispose () {
 	}
 }
