@@ -24,6 +24,7 @@ import fi.chaocompany.online.util.GameObject;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
@@ -52,7 +53,22 @@ public class RoomState implements Screen {
 
             @Override
             public void handleFrame(StompHeaders stompHeaders, Object o) {
-                Gdx.app.log(LOG_TAG, "RECEIVED GAME OBJECT");
+                ServerGameObject object = (ServerGameObject) o;
+                try {
+                    Class<?> c = Class.forName(object.getClazz());
+                    Constructor<?> constructor = c.getConstructor(Texture.class, float.class, float.class);
+
+                    Gdx.app.postRunnable(() -> {
+                        try {
+                            GameObject gameObject = (GameObject) constructor.newInstance(new Texture(object.getTexture()), object.getX(), object.getY());
+                            objects.put(objects.size(), gameObject);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -128,9 +144,6 @@ public class RoomState implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.setProjectionMatrix(this.camera.combined);
-
-        this.player.update();
-
         batch.begin();
         this.tileMap.drawMap(batch);
         this.objects.values().forEach(o -> {

@@ -23,9 +23,8 @@ public class Player extends GameObject {
     private Map<Integer, Animation<TextureRegion>> animations;
     private float stateTime;
 
-    public Player(Texture texture, Vector2 pos, Map<Integer, GameObject> objects) {
-        super(texture, pos, objects);
-
+    public Player(Texture texture, float x, float y) {
+        super(texture, x, y);
         this.targetX = getX();
         this.targetY = getY();
 
@@ -33,6 +32,10 @@ public class Player extends GameObject {
         this.direction = 0;
         this.stateTime = 1f;
         this.path = new ArrayList<>();
+    }
+
+    public Player(Texture texture, Vector2 pos, Map<Integer, GameObject> objects) {
+        super(texture, pos, objects);
     }
 
     public void moveTo(Collection<Node> path) {

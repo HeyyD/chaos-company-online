@@ -23,7 +23,7 @@ public class GameObjectController {
     @MessageMapping("/object")
     @SendTo("/object")
     public GameObject addGameObject(GameObject gameObject) throws Exception {
-        this.objects.put(objects.size(), gameObject);
+        // this.objects.put(objects.size(), gameObject);
         return gameObject;
     }
 }

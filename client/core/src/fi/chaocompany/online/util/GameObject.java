@@ -22,13 +22,17 @@ public abstract class GameObject {
     protected abstract TextureRegion initSprite(Texture texture);
     protected abstract void update();
 
-    public GameObject(Texture texture, Vector2 pos, Map<Integer, GameObject> objects) {
+    public GameObject(Texture texture, float x, float y) {
         this.sprite = this.initSprite(texture);
+        this.x = x;
+        this.y = y;
+    }
 
+    public GameObject(Texture texture, Vector2 pos, Map<Integer, GameObject> objects) {
         this.x = pos.x;
         this.y = pos.y;
 
-        objects.put(objects.size(), this);
+        // objects.put(objects.size(), this);
         this.sendToServer(texture);
     }
 
