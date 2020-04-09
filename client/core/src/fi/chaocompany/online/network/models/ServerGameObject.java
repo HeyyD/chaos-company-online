@@ -8,6 +8,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public class ServerGameObject {
+
+    private int id;
+
     private String sessionId;
     private String texture;
     private String clazz;
@@ -18,7 +21,16 @@ public class ServerGameObject {
     public ServerGameObject() {
     }
 
+    public ServerGameObject(int id, float x, float y, String texture, String clazz) {
+        this.id = id;
+        this.texture = texture;
+        this.clazz = clazz;
+        this.x = x;
+        this.y = y;
+    }
+
     public ServerGameObject(float x, float y, String texture, String clazz) {
+        this.id = 0;
         this.x = x;
         this.y = y;
         this.texture = texture;
@@ -71,5 +83,13 @@ public class ServerGameObject {
         Class<?> c = Class.forName(this.getClazz());
         Constructor<?> constructor = c.getConstructor(Texture.class, float.class, float.class);
         return (GameObject) constructor.newInstance(new Texture(this.getTexture()), this.getX(), this.getY());
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

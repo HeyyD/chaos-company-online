@@ -1,6 +1,9 @@
 package fi.chaoscompany.server.models;
 
 public class GameObject {
+
+    private int id;
+
     private String sessionId;
     private String texture;
     private String clazz;
@@ -11,7 +14,8 @@ public class GameObject {
     public GameObject() {
     }
 
-    public GameObject(float x, float y, String texture, String clazz) {
+    public GameObject(int id, float x, float y, String texture, String clazz) {
+        this.id = id;
         this.x = x;
         this.y = y;
         this.texture = texture;
@@ -56,5 +60,13 @@ public class GameObject {
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

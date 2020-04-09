@@ -13,6 +13,8 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/api/game")
 public class GameObjectController {
+    private int currentId = 0;
+
     private Map<Integer, GameObject> objects = new HashMap<>();
 
     @RequestMapping(method = RequestMethod.GET)
@@ -23,7 +25,9 @@ public class GameObjectController {
     @MessageMapping("/object")
     @SendTo("/object")
     public GameObject addGameObject(GameObject gameObject) throws Exception {
-        this.objects.put(objects.size(), gameObject);
+        gameObject.setId(currentId);
+        currentId++;
+        this.objects.put(gameObject.getId(), gameObject);
         return gameObject;
     }
 }

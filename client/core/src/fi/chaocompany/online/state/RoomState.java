@@ -56,7 +56,7 @@ public class RoomState implements Screen {
                 Gdx.app.postRunnable(() -> {
                     try {
                         GameObject gameObject = ((ServerGameObject) o).toGameObject();
-                        objects.put(objects.size(), gameObject);
+                        objects.put(object.getId(), gameObject);
                         // Set the player object
                         if (gameObject instanceof Player && object.getSessionId().equals(WebSocket.getInstance().getId())) {
                             player = (Player) gameObject;
