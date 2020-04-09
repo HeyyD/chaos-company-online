@@ -14,11 +14,13 @@ public class Main extends Game {
 
 	private final String LOG_TAG = Main.class.getSimpleName();
 
+	private static final String api = "http://localhost:8080/api";
+
 	@Override
 	public void create () {
 		Http http = new Http();
 		try {
-			http.get("http://localhost:8080/map", (ResponseHandler<String>) response -> {
+			http.get(api + "/map", (ResponseHandler<MapMessage>) response -> {
 				int status = response.getStatusLine().getStatusCode();
 				if (status >= 200 && status < 300) {
 					HttpEntity entity = response.getEntity();
@@ -26,7 +28,7 @@ public class Main extends Game {
 						String string = EntityUtils.toString(entity);
 						MapMessage map = new Gson().fromJson(string, MapMessage.class);
 						setScreen(new RoomState(map.getMap()));
-						return string;
+						return map;
 					}
 					return null;
 				} else {

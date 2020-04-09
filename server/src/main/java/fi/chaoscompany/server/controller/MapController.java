@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/map")
+@RequestMapping(value = "/api/map")
 public class MapController {
     Logger logger = LoggerFactory.getLogger(MapController.class);
 

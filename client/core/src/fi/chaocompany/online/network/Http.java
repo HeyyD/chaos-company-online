@@ -9,7 +9,6 @@ public class Http {
     public void get(String url, ResponseHandler<?> responseHandler) throws Exception {
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             HttpGet httpget = new HttpGet(url);
-            System.out.println("Executing request " + httpget.getRequestLine());
             httpclient.execute(httpget, responseHandler);
         }
     }
