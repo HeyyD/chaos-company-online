@@ -87,11 +87,7 @@ public class Player extends GameObject {
 
         if (distance >= 5f) {
             setTargetPos(new Vector2(currentPos.x + velocity.x, currentPos.y + velocity.y));
-            // setX(currentPos.x + velocity.x);
-            // setY(currentPos.y + velocity.y);
         } else if (distance != 0) {
-            // setX(this.targetX);
-            // setY(this.targetY);
             setTargetPos(new Vector2(this.targetX, this.targetY));
             if (this.path.size() > 0) {
                 this.setTargetPosition();
