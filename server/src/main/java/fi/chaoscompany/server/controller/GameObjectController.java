@@ -39,7 +39,6 @@ public class GameObjectController {
     @MessageMapping("/update")
     @SendTo("/update")
     public UpdateMessage updateGameObject(UpdateMessage update) {
-        logger.info(update.toString());
         int id = update.getId();
         GameObject object = this.objects.get(id);
 
