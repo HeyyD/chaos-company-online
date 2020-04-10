@@ -52,7 +52,6 @@ public class Player extends GameObject {
     }
 
     public void update(int id) {
-        super.update(id);
         stateTime += Gdx.graphics.getDeltaTime();
 
         Vector2 currentPos = new Vector2(getX(), getY());
@@ -64,6 +63,7 @@ public class Player extends GameObject {
         } else {
             setSprite(this.animations.get(direction).getKeyFrames()[0]);
         }
+        super.update(id);
     }
 
     private void move(float x, float y) {
