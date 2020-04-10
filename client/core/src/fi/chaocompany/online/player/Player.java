@@ -52,6 +52,8 @@ public class Player extends GameObject {
     }
 
     public void update() {
+        super.update();
+
         stateTime += Gdx.graphics.getDeltaTime();
 
         Vector2 currentPos = new Vector2(getX(), getY());

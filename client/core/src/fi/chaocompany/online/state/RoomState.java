@@ -14,6 +14,7 @@ import fi.chaocompany.online.map.TileConstants;
 import fi.chaocompany.online.map.TileMap;
 import fi.chaocompany.online.network.WebSocket;
 import fi.chaocompany.online.network.models.ServerGameObject;
+import fi.chaocompany.online.network.models.UpdateMessage;
 import fi.chaocompany.online.pathfinding.Astar;
 import fi.chaocompany.online.pathfinding.Node;
 import fi.chaocompany.online.player.Player;
@@ -62,6 +63,18 @@ public class RoomState implements Screen {
                         e.printStackTrace();
                     }
                 });
+            }
+        });
+
+        WebSocket.getInstance().subscribe("/update", new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders stompHeaders) {
+                return UpdateMessage.class;
+            }
+
+            @Override
+            public void handleFrame(StompHeaders stompHeaders, Object o) {
+                Gdx.app.log(LOG_TAG, "Update received");
             }
         });
 

@@ -11,7 +11,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/map", "/object", "/delete");
+        config.enableSimpleBroker("/map", "/object", "/delete", "/update");
         config.setApplicationDestinationPrefixes("/game");
     }
 

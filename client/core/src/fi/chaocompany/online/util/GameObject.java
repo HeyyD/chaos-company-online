@@ -18,7 +18,6 @@ public abstract class GameObject {
     private float y;
 
     protected abstract TextureRegion initSprite(Texture texture);
-    public abstract void update();
 
     public GameObject(Texture texture, float x, float y) {
         this.sprite = this.initSprite(texture);
@@ -36,6 +35,11 @@ public abstract class GameObject {
 
     public void draw(SpriteBatch batch) {
         batch.draw(getSprite(), getX(), getY(), getSprite().getRegionWidth(), getSprite().getRegionHeight());
+    }
+
+    public void update() {
+        WebSocket socket = WebSocket.getInstance();
+        socket.send("/game/update", "Update!");
     }
 
     public TextureRegion getSprite() {

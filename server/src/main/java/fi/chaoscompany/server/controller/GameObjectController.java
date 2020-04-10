@@ -1,6 +1,7 @@
 package fi.chaoscompany.server.controller;
 
 import fi.chaoscompany.server.models.GameObject;
+import fi.chaoscompany.server.models.UpdateMessage;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,12 @@ public class GameObjectController {
         currentId++;
         this.objects.put(gameObject.getId(), gameObject);
         return new GameObject(this.objects.get(gameObject.getId()));
+    }
+
+    @MessageMapping("/update")
+    @SendTo("/update")
+    public UpdateMessage updateGameObject(UpdateMessage update) {
+        return new UpdateMessage("Update received");
     }
 
     @MessageMapping("/delete")
