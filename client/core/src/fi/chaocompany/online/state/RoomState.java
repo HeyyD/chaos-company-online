@@ -181,7 +181,9 @@ public class RoomState implements Screen {
         batch.begin();
         this.tileMap.drawMap(batch);
         this.objects.forEach((key, value) -> {
-            value.update(key);
+            if (!value.getTargetPos().equals(new Vector2(value.getX(), value.getY()))) {
+                value.update(key);
+            }
             value.draw(batch);
         });
         batch.end();
