@@ -74,7 +74,12 @@ public class RoomState implements Screen {
 
             @Override
             public void handleFrame(StompHeaders stompHeaders, Object o) {
-                Gdx.app.log(LOG_TAG, "Update received");
+                UpdateMessage update = (UpdateMessage) o;
+                GameObject gameObject = objects.get(update.getId());
+                gameObject.setX(update.getX());
+                gameObject.setY(update.getY());
+
+                objects.replace(update.getId(), gameObject);
             }
         });
 
@@ -181,9 +186,7 @@ public class RoomState implements Screen {
         batch.begin();
         this.tileMap.drawMap(batch);
         this.objects.forEach((key, value) -> {
-            if (!value.getTargetPos().equals(new Vector2(value.getX(), value.getY()))) {
-                value.update(key);
-            }
+            value.update(key);
             value.draw(batch);
         });
         batch.end();

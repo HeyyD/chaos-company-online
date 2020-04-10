@@ -2,6 +2,8 @@ package fi.chaoscompany.server.controller;
 
 import fi.chaoscompany.server.models.GameObject;
 import fi.chaoscompany.server.models.UpdateMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,8 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/api/game")
 public class GameObjectController {
+    Logger logger = LoggerFactory.getLogger(GameObjectController.class);
+
     private int currentId = 0;
 
     private Map<Integer, GameObject> objects = new HashMap<>();
@@ -35,12 +39,14 @@ public class GameObjectController {
     @MessageMapping("/update")
     @SendTo("/update")
     public UpdateMessage updateGameObject(UpdateMessage update) {
+        logger.info(update.toString());
+
         int id = update.getId();
         GameObject object = this.objects.get(id);
         object.setX(update.getX());
         object.setY(update.getY());
 
-        return new UpdateMessage(id, object.getX(), object.getY());
+        return new UpdateMessage(id, update.getX(), update.getY());
     }
 
     @MessageMapping("/delete")

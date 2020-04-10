@@ -34,4 +34,13 @@ public class UpdateMessage {
     public void setY(float y) {
         this.y = y;
     }
+
+    @Override
+    public String toString() {
+        return "UpdateMessage{" +
+                "id=" + id +
+                ", x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }
