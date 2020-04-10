@@ -93,20 +93,21 @@ public class RoomState implements Screen {
             @Override
             public boolean tap(float x, float y, int count, int button) {
                 // Move player
-                Vector2 cell = screenToCell(x, y);
-                Vector2 playerCell = worldToCell(player.getX(), player.getY());
+                if (player != null) {
+                    Vector2 cell = screenToCell(x, y);
+                    Vector2 playerCell = worldToCell(player.getX(), player.getY());
 
-                try {
-                    Tile currentTile = tileMap.selectTile(playerCell.x, playerCell.y);
-                    Tile targetTile = tileMap.selectTile(cell.x, cell.y);
+                    try {
+                        Tile currentTile = tileMap.selectTile(playerCell.x, playerCell.y);
+                        Tile targetTile = tileMap.selectTile(cell.x, cell.y);
 
-                    Astar astar = new Astar();
-                    Collection<Node> path = astar.findPath(currentTile, targetTile);
-                    player.moveTo(path);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    Gdx.app.error(LOG_TAG, "Tile not selectable");
+                        Astar astar = new Astar();
+                        Collection<Node> path = astar.findPath(currentTile, targetTile);
+                        player.moveTo(path);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        Gdx.app.error(LOG_TAG, "Tile not selectable");
+                    }
                 }
-
                 return false;
             }
         }));
