@@ -5,6 +5,8 @@ public class UpdateMessage {
     private float x;
     private float y;
 
+    public UpdateMessage() {}
+
     public UpdateMessage(int id, float x, float y) {
         this.id = id;
         this.x = x;

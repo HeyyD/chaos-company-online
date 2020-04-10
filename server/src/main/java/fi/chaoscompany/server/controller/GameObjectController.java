@@ -35,7 +35,12 @@ public class GameObjectController {
     @MessageMapping("/update")
     @SendTo("/update")
     public UpdateMessage updateGameObject(UpdateMessage update) {
-        return new UpdateMessage("Update received");
+        int id = update.getId();
+        GameObject object = this.objects.get(id);
+        object.setX(update.getX());
+        object.setY(update.getY());
+
+        return new UpdateMessage(id, object.getX(), object.getY());
     }
 
     @MessageMapping("/delete")

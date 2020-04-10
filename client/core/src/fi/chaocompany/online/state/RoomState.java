@@ -180,9 +180,9 @@ public class RoomState implements Screen {
         batch.setProjectionMatrix(this.camera.combined);
         batch.begin();
         this.tileMap.drawMap(batch);
-        this.objects.values().forEach(o -> {
-            o.update();
-            o.draw(batch);
+        this.objects.forEach((key, value) -> {
+            value.update(key);
+            value.draw(batch);
         });
         batch.end();
 

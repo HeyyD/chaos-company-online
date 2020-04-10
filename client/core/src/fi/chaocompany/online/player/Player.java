@@ -51,8 +51,8 @@ public class Player extends GameObject {
         return new TextureRegion(texture, 0, 0, PlayerConstants.FRAME_WIDTH_PIXELS, PlayerConstants.FRAME_HEIGHT_PIXELS);
     }
 
-    public void update() {
-        super.update();
+    public void update(int id) {
+        super.update(id);
 
         stateTime += Gdx.graphics.getDeltaTime();
 
@@ -87,11 +87,13 @@ public class Player extends GameObject {
         }
 
         if (distance >= 5f) {
-            setX(currentPos.x + velocity.x);
-            setY(currentPos.y + velocity.y);
+            setTargetPos(new Vector2(currentPos.x + velocity.x, currentPos.y + velocity.y));
+            // setX(currentPos.x + velocity.x);
+            // setY(currentPos.y + velocity.y);
         } else if (distance != 0) {
-            setX(this.targetX);
-            setY(this.targetY);
+            // setX(this.targetX);
+            // setY(this.targetY);
+            setTargetPos(new Vector2(this.targetX, this.targetY));
             if (this.path.size() > 0) {
                 this.setTargetPosition();
             }

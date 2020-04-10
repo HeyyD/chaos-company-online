@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.math.Vector2;
 import fi.chaocompany.online.network.WebSocket;
 import fi.chaocompany.online.network.models.ServerGameObject;
+import fi.chaocompany.online.network.models.UpdateMessage;
 
 public abstract class GameObject {
 
@@ -17,19 +18,23 @@ public abstract class GameObject {
     private float x;
     private float y;
 
+    private Vector2 targetPos;
+
     protected abstract TextureRegion initSprite(Texture texture);
 
     public GameObject(Texture texture, float x, float y) {
         this.sprite = this.initSprite(texture);
         this.x = x;
         this.y = y;
+
+        this.targetPos = new Vector2(this.x, this.y);
     }
 
     public GameObject(Texture texture, Vector2 pos) {
         this.x = pos.x;
         this.y = pos.y;
 
-        // objects.put(objects.size(), this);
+        this.targetPos = new Vector2(this.x, this.y);
         this.sendToServer(texture);
     }
 
@@ -37,9 +42,23 @@ public abstract class GameObject {
         batch.draw(getSprite(), getX(), getY(), getSprite().getRegionWidth(), getSprite().getRegionHeight());
     }
 
-    public void update() {
-        WebSocket socket = WebSocket.getInstance();
-        socket.send("/game/update", "Update!");
+    public void update(int id) {
+        Vector2 currentPos = new Vector2(this.x, this.y);
+
+        if (!currentPos.equals(targetPos)) {
+            WebSocket socket = WebSocket.getInstance();
+            UpdateMessage update = new UpdateMessage(id, targetPos.x, targetPos.y);
+
+            socket.send("/game/update", update);
+        }
+    }
+
+    public Vector2 getTargetPos() {
+        return targetPos;
+    }
+
+    public void setTargetPos(Vector2 targetPos) {
+        this.targetPos = targetPos;
     }
 
     public TextureRegion getSprite() {
