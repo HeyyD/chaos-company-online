@@ -40,13 +40,14 @@ public class GameObjectController {
     @SendTo("/update")
     public UpdateMessage updateGameObject(UpdateMessage update) {
         logger.info(update.toString());
-
         int id = update.getId();
         GameObject object = this.objects.get(id);
-        object.setX(update.getX());
-        object.setY(update.getY());
 
-        return new UpdateMessage(id, update.getX(), update.getY());
+        if (object.getSessionId().equals(update.getSessionId())) {
+            object.setX(update.getX());
+            object.setY(update.getY());
+        }
+        return new UpdateMessage(id, object.getX(), object.getY(), update.getSessionId());
     }
 
     @MessageMapping("/delete")

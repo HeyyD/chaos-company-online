@@ -4,11 +4,13 @@ public class UpdateMessage {
     private int id;
     private float x;
     private float y;
+    private String sessionId;
 
-    public UpdateMessage(int id, float x, float y) {
+    public UpdateMessage(int id, float x, float y, String sessionId) {
         this.id = id;
         this.x = x;
         this.y = y;
+        this.sessionId = sessionId;
     }
 
     public int getId() {
@@ -33,6 +35,14 @@ public class UpdateMessage {
 
     public void setY(float y) {
         this.y = y;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     @Override

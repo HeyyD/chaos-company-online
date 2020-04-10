@@ -47,7 +47,7 @@ public abstract class GameObject {
 
         if (!currentPos.equals(targetPos)) {
             WebSocket socket = WebSocket.getInstance();
-            UpdateMessage update = new UpdateMessage(id, targetPos.x, targetPos.y);
+            UpdateMessage update = new UpdateMessage(id, targetPos.x, targetPos.y, socket.getId());
 
             socket.send("/game/update", update);
         }
