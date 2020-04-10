@@ -78,8 +78,6 @@ public class RoomState implements Screen {
                 GameObject gameObject = objects.get(update.getId());
                 gameObject.setX(update.getX());
                 gameObject.setY(update.getY());
-
-                objects.replace(update.getId(), gameObject);
             }
         });
 
