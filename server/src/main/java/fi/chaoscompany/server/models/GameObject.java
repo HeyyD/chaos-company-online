@@ -14,6 +14,15 @@ public class GameObject {
     public GameObject() {
     }
 
+    public GameObject(GameObject o) {
+        this.id = o.getId();
+        this.x = o.getX();
+        this.y = o.getY();
+        this.texture = o.getTexture();
+        this.clazz = o.getClazz();
+        this.sessionId = o.getSessionId();
+    }
+
     public GameObject(int id, float x, float y, String texture, String clazz) {
         this.id = id;
         this.x = x;

@@ -28,7 +28,7 @@ public class GameObjectController {
         gameObject.setId(currentId);
         currentId++;
         this.objects.put(gameObject.getId(), gameObject);
-        return gameObject;
+        return new GameObject(this.objects.get(gameObject.getId()));
     }
 
     @MessageMapping("/delete")
