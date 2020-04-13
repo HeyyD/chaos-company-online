@@ -78,13 +78,7 @@ public class Player extends GameObject {
         Vector2 targetPos = new Vector2(this.targetX, this.targetY);
         float distance = currentPos.dst(targetPos);
 
-        Vector2 dir;
-
-        if (!currentPos.equals(this.previousPos)) {
-            dir = new Vector2(x - this.previousPos.x, y - this.previousPos.y).nor();
-        } else {
-            dir = new Vector2(this.targetX - x, this.targetY - y).nor();
-        }
+        Vector2 dir = new Vector2(this.targetX - x, this.targetY - y).nor();
         Vector2 velocity = new Vector2(dir.x * speed, dir.y * speed);
 
         // Could this be better?
@@ -100,10 +94,8 @@ public class Player extends GameObject {
 
         if (distance >= 5f) {
             setTargetPos(new Vector2(currentPos.x + velocity.x, currentPos.y + velocity.y));
-            this.previousPos = currentPos;
         } else if (distance != 0) {
             setTargetPos(new Vector2(this.targetX, this.targetY));
-            this.previousPos = this.getTargetPos();
             if (this.path.size() > 0) {
                 this.setTargetPosition();
             }
