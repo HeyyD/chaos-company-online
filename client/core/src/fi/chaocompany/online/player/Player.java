@@ -63,25 +63,29 @@ public class Player extends GameObject {
         Vector2 currentPos = new Vector2(getX(), getY());
         Vector2 targetPos = new Vector2(this.targetX, this.targetY);
 
-        if (!currentPos.equals(targetPos)) {
-            this.move(getX(), getY());
-            setSprite(this.animations.get(direction).getKeyFrame(stateTime, true));
-        } else {
+        /*
+        if(currentPos.equals(getPreviousPos())) {
             setSprite(this.animations.get(direction).getKeyFrames()[0]);
+        } else {
+
         }
+         */
+        if (!currentPos.equals(targetPos)) {
+            this.move();
+        }
+
+        if (this.direction != getDirection()) {
+            this.direction = getDirection();
+        }
+        setSprite(this.animations.get(direction).getKeyFrame(stateTime, true));
+
         super.update(id);
     }
 
-    private void move(float x, float y) {
-        float speed = 5f;
-        Vector2 currentPos = new Vector2(x, y);
-        Vector2 targetPos = new Vector2(this.targetX, this.targetY);
-        float distance = currentPos.dst(targetPos);
+    private int getDirection() {
+        Vector2 dir = new Vector2(getX() - getPreviousPos().x, getY() - getPreviousPos().y).nor();
+        int direction;
 
-        Vector2 dir = new Vector2(this.targetX - x, this.targetY - y).nor();
-        Vector2 velocity = new Vector2(dir.x * speed, dir.y * speed);
-
-        // Could this be better?
         if(dir.x > 0 && dir.y > 0){
             direction = 1;
         }else if(dir.x > 0){
@@ -91,6 +95,18 @@ public class Player extends GameObject {
         }else{
             direction = 3;
         }
+
+        return direction;
+    }
+
+    private void move() {
+        float speed = 5f;
+        Vector2 currentPos = new Vector2(getX(), getY());
+        Vector2 targetPos = new Vector2(this.targetX, this.targetY);
+        float distance = currentPos.dst(targetPos);
+
+        Vector2 dir = new Vector2(this.targetX - getX(), this.targetY - getY()).nor();
+        Vector2 velocity = new Vector2(dir.x * speed, dir.y * speed);
 
         if (distance >= 5f) {
             setTargetPos(new Vector2(currentPos.x + velocity.x, currentPos.y + velocity.y));

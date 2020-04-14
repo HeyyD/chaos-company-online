@@ -76,8 +76,12 @@ public class RoomState implements Screen {
             public void handleFrame(StompHeaders stompHeaders, Object o) {
                 UpdateMessage update = (UpdateMessage) o;
                 GameObject gameObject = objects.get(update.getId());
-                gameObject.setX(update.getX());
-                gameObject.setY(update.getY());
+
+                if (gameObject != null && update.getSessionId().equals(WebSocket.getInstance().getId())) {
+                    gameObject.setPreviousPos(new Vector2(gameObject.getX(), gameObject.getY()));
+                    gameObject.setX(update.getX());
+                    gameObject.setY(update.getY());
+                }
             }
         });
 
@@ -183,6 +187,7 @@ public class RoomState implements Screen {
         batch.setProjectionMatrix(this.camera.combined);
         batch.begin();
         this.tileMap.drawMap(batch);
+
         this.objects.forEach((key, value) -> {
             value.update(key);
             value.draw(batch);

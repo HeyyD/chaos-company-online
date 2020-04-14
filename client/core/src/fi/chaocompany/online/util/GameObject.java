@@ -19,6 +19,7 @@ public abstract class GameObject {
     private float y;
 
     private Vector2 targetPos;
+    private Vector2 previousPos;
 
     protected abstract TextureRegion initSprite(Texture texture);
 
@@ -28,6 +29,7 @@ public abstract class GameObject {
         this.y = y;
 
         this.targetPos = new Vector2(this.x, this.y);
+        this.previousPos = new Vector2(this.x, this.y);
     }
 
     public GameObject(Texture texture, Vector2 pos) {
@@ -35,6 +37,7 @@ public abstract class GameObject {
         this.y = pos.y;
 
         this.targetPos = new Vector2(this.x, this.y);
+        this.previousPos = new Vector2(this.x, this.y);
         this.sendToServer(texture);
     }
 
@@ -43,14 +46,18 @@ public abstract class GameObject {
     }
 
     public void update(int id) {
-        Vector2 currentPos = new Vector2(this.x, this.y);
+        WebSocket socket = WebSocket.getInstance();
+        UpdateMessage update = new UpdateMessage(id, targetPos.x, targetPos.y, socket.getId());
 
-        if (!currentPos.equals(targetPos)) {
-            WebSocket socket = WebSocket.getInstance();
-            UpdateMessage update = new UpdateMessage(id, targetPos.x, targetPos.y, socket.getId());
+        socket.send("/game/update", update);
+    }
 
-            socket.send("/game/update", update);
-        }
+    public Vector2 getPreviousPos() {
+        return previousPos;
+    }
+
+    public void setPreviousPos(Vector2 previousPos) {
+        this.previousPos = previousPos;
     }
 
     public Vector2 getTargetPos() {
