@@ -146,20 +146,6 @@ public class RoomState implements Screen {
                 }
                 return super.scrolled(amount);
             }
-
-            @Override
-            public boolean keyUp(int keycode) {
-                Gdx.app.log(LOG_TAG, "EXIT");
-                if (keycode == Input.Keys.ESCAPE) {
-                    for (Map.Entry<Integer, GameObject> entry : objects.entrySet()) {
-                        if (entry.getValue().equals(player)) {
-                            WebSocket.getInstance().send("/game/delete", entry.getKey());
-                        }
-                    }
-                    Gdx.app.exit();
-                }
-                return super.keyUp(keycode);
-            }
         });
         Gdx.input.setInputProcessor(multiplexer);
 
@@ -222,6 +208,13 @@ public class RoomState implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
+
+        for (Map.Entry<Integer, GameObject> entry : objects.entrySet()) {
+            if (entry.getValue().equals(player)) {
+                WebSocket.getInstance().send("/game/delete", entry.getKey());
+            }
+        }
+        Gdx.app.exit();
     }
 
     private Matrix4 getInverseMatrix() {
