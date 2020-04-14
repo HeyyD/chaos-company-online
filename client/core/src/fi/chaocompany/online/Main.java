@@ -3,14 +3,20 @@ package fi.chaocompany.online;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import fi.chaocompany.online.network.Http;
 import fi.chaocompany.online.network.MapMessage;
 import fi.chaocompany.online.network.WebSocket;
+import fi.chaocompany.online.network.models.ServerGameObject;
 import fi.chaocompany.online.state.RoomState;
+import fi.chaocompany.online.util.GameObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.util.EntityUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main extends Game {
 
@@ -18,10 +24,30 @@ public class Main extends Game {
 
 	private static final String api = "http://localhost:8080/api";
 
+	private int[][] map;
+	private Map<Integer, GameObject> objects = new HashMap<>();
+
 	@Override
 	public void create () {
 		WebSocket socket = WebSocket.getInstance();
-		socket.registerOnConnectListener(this::loadMap);
+		socket.registerOnConnectListener(() -> {
+			this.loadMap();
+			this.loadObjects();
+		});
+
+		new Thread(() -> {
+			while (isLoading()) {
+				try {
+					Thread.sleep(200);
+					Gdx.app.log(LOG_TAG, "Loading...");
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			Gdx.app.postRunnable(() -> {
+				setScreen(new RoomState(this.map, this.objects));
+			});
+		}).start();
 	}
 
 	@Override
@@ -31,6 +57,42 @@ public class Main extends Game {
 	
 	@Override
 	public void dispose () {
+		getScreen().dispose();
+	}
+
+	private void loadObjects() {
+		Http http = new Http();
+		try {
+			http.get(api + "/game", (ResponseHandler<Map<Integer, GameObject>>) response -> {
+				int status = response.getStatusLine().getStatusCode();
+				if (status >= 200 && status < 300) {
+					HttpEntity entity = response.getEntity();
+					if (entity != null) {
+						String string = EntityUtils.toString(entity);
+						LinkedTreeMap<String, Object> temp = new Gson().fromJson(string, LinkedTreeMap.class);
+						Map<Integer, GameObject> map = new HashMap<>();
+						temp.forEach((key, value) -> {
+							Gdx.app.postRunnable(() -> {
+								Gson gson = new Gson();
+								ServerGameObject o = gson.fromJson(value.toString(), ServerGameObject.class);
+								try {
+									map.put(Integer.parseInt(key), o.toGameObject());
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							});
+						});
+						this.objects = map;
+						return map;
+					}
+					return null;
+				} else {
+					throw new ClientProtocolException("Unexpected response status: " + status);
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void loadMap() {
@@ -43,9 +105,7 @@ public class Main extends Game {
 					if (entity != null) {
 						String string = EntityUtils.toString(entity);
 						MapMessage map = new Gson().fromJson(string, MapMessage.class);
-						Gdx.app.postRunnable(() -> {
-							setScreen(new RoomState(map.getMap()));
-						});
+						this.map = map.getMap();
 						return map;
 					}
 					return null;
@@ -56,5 +116,9 @@ public class Main extends Game {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private boolean isLoading() {
+		return this.map == null || this.objects == null;
 	}
 }

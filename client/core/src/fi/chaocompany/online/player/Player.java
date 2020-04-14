@@ -3,7 +3,6 @@ package fi.chaocompany.online.player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import fi.chaocompany.online.map.Tile;
@@ -14,8 +13,12 @@ import java.util.*;
 
 public class Player extends GameObject {
 
+    private final static String LOG_TAG = Player.class.getSimpleName();
+
     private float targetX;
     private float targetY;
+
+    private Vector2 previousPos;
 
     private int direction;
 
@@ -24,16 +27,21 @@ public class Player extends GameObject {
     private Map<Integer, Animation<TextureRegion>> animations;
     private float stateTime;
 
-    public Player(Texture texture, Vector2 pos, List<GameObject> objects) {
-        super(texture, pos, objects);
-
+    public Player(Texture texture, float x, float y) {
+        super(texture, x, y);
         this.targetX = getX();
         this.targetY = getY();
+
+        this.previousPos = new Vector2(getX(), getY());
 
         this.animations = initAnimations(texture);
         this.direction = 0;
         this.stateTime = 1f;
         this.path = new ArrayList<>();
+    }
+
+    public Player(Texture texture, Vector2 pos) {
+        super(texture, pos);
     }
 
     public void moveTo(Collection<Node> path) {
@@ -56,22 +64,23 @@ public class Player extends GameObject {
         Vector2 targetPos = new Vector2(this.targetX, this.targetY);
 
         if (!currentPos.equals(targetPos)) {
-            this.move(getX(), getY());
-            setSprite(this.animations.get(direction).getKeyFrame(stateTime, true));
-        } else {
+            this.move();
+        }
+
+        if (direction != getDirection() && !currentPos.equals(getPreviousPos())) {
+            this.direction = getDirection();
+        }
+        if(currentPos.equals(getPreviousPos())) {
             setSprite(this.animations.get(direction).getKeyFrames()[0]);
+        } else {
+            setSprite(this.animations.get(direction).getKeyFrame(stateTime, true));
         }
     }
 
-    private void move(float x, float y) {
-        float speed = 5f;
-        Vector2 currentPos = new Vector2(x, y);
-        Vector2 targetPos = new Vector2(this.targetX, this.targetY);
-        float distance = currentPos.dst(targetPos);
-        Vector2 dir = new Vector2(this.targetX - x, this.targetY - y).nor();
-        Vector2 velocity = new Vector2(dir.x * speed, dir.y * speed);
+    private int getDirection() {
+        Vector2 dir = new Vector2(getX() - getPreviousPos().x, getY() - getPreviousPos().y).nor();
+        int direction;
 
-        // Could this be better?
         if(dir.x > 0 && dir.y > 0){
             direction = 1;
         }else if(dir.x > 0){
@@ -82,17 +91,26 @@ public class Player extends GameObject {
             direction = 3;
         }
 
+        return direction;
+    }
+
+    private void move() {
+        float speed = 5f;
+        Vector2 currentPos = new Vector2(getX(), getY());
+        Vector2 targetPos = new Vector2(this.targetX, this.targetY);
+        float distance = currentPos.dst(targetPos);
+
+        Vector2 dir = new Vector2(this.targetX - getX(), this.targetY - getY()).nor();
+        Vector2 velocity = new Vector2(dir.x * speed, dir.y * speed);
+
         if (distance >= 5f) {
-            setX(currentPos.x + velocity.x);
-            setY(currentPos.y + velocity.y);
+            setTargetPos(new Vector2(currentPos.x + velocity.x, currentPos.y + velocity.y));
         } else if (distance != 0) {
-            setX(this.targetX);
-            setY(this.targetY);
+            setTargetPos(new Vector2(this.targetX, this.targetY));
             if (this.path.size() > 0) {
                 this.setTargetPosition();
             }
         }
-
     }
 
     private void setTargetPosition() {

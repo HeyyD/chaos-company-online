@@ -1,9 +1,6 @@
 package fi.chaocompany.online.state;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,28 +12,92 @@ import com.badlogic.gdx.math.Vector3;
 import fi.chaocompany.online.map.Tile;
 import fi.chaocompany.online.map.TileConstants;
 import fi.chaocompany.online.map.TileMap;
+import fi.chaocompany.online.network.WebSocket;
+import fi.chaocompany.online.network.models.ServerGameObject;
+import fi.chaocompany.online.network.models.UpdateMessage;
 import fi.chaocompany.online.pathfinding.Astar;
 import fi.chaocompany.online.pathfinding.Node;
 import fi.chaocompany.online.player.Player;
 import fi.chaocompany.online.util.GameObject;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
 
-import java.util.ArrayList;
+import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
 
 public class RoomState implements Screen {
 
     private static final String LOG_TAG = RoomState.class.getSimpleName();
 
-    private List<GameObject> objects = new ArrayList<>();
+    private Map<Integer, GameObject> objects;
 
     private SpriteBatch batch;
     private TileMap tileMap;
     private OrthographicCamera camera;
     private Player player;
 
-    public RoomState(int[][] map) {
+    public RoomState(int[][] map, Map<Integer, GameObject> objects) {
         // Set camera controls
+        this.objects = objects;
+
+        // Start listening to websocket messages
+        WebSocket.getInstance().subscribe("/object", new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders stompHeaders) {
+                return ServerGameObject.class;
+            }
+
+            @Override
+            public void handleFrame(StompHeaders stompHeaders, Object o) {
+                ServerGameObject object = (ServerGameObject) o;
+                Gdx.app.postRunnable(() -> {
+                    try {
+                        GameObject gameObject = ((ServerGameObject) o).toGameObject();
+                        objects.put(object.getId(), gameObject);
+                        // Set the player object
+                        if (gameObject instanceof Player && object.getSessionId().equals(WebSocket.getInstance().getId())) {
+                            player = (Player) gameObject;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+        });
+
+        WebSocket.getInstance().subscribe("/update", new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders stompHeaders) {
+                return UpdateMessage.class;
+            }
+
+            @Override
+            public void handleFrame(StompHeaders stompHeaders, Object o) {
+                UpdateMessage update = (UpdateMessage) o;
+                GameObject gameObject = objects.get(update.getId());
+
+                if (gameObject != null) {
+                    gameObject.setPreviousPos(new Vector2(gameObject.getX(), gameObject.getY()));
+                    gameObject.setX(update.getX());
+                    gameObject.setY(update.getY());
+                }
+            }
+        });
+
+        WebSocket.getInstance().subscribe("/delete", new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders stompHeaders) {
+                return Integer.class;
+            }
+
+            @Override
+            public void handleFrame(StompHeaders stompHeaders, Object o) {
+                int key = (int) o;
+                objects.remove(key);
+            }
+        });
+
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(new GestureDetector(new GestureDetector.GestureAdapter() {
             @Override
@@ -52,20 +113,21 @@ public class RoomState implements Screen {
             @Override
             public boolean tap(float x, float y, int count, int button) {
                 // Move player
-                Vector2 cell = screenToCell(x, y);
-                Vector2 playerCell = worldToCell(player.getX(), player.getY());
+                if (player != null) {
+                    Vector2 cell = screenToCell(x, y);
+                    Vector2 playerCell = worldToCell(player.getX(), player.getY());
 
-                try {
-                    Tile currentTile = tileMap.selectTile(playerCell.x, playerCell.y);
-                    Tile targetTile = tileMap.selectTile(cell.x, cell.y);
+                    try {
+                        Tile currentTile = tileMap.selectTile(playerCell.x, playerCell.y);
+                        Tile targetTile = tileMap.selectTile(cell.x, cell.y);
 
-                    Astar astar = new Astar();
-                    Collection<Node> path = astar.findPath(currentTile, targetTile);
-                    player.moveTo(path);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    Gdx.app.error(LOG_TAG, "Tile not selectable");
+                        Astar astar = new Astar();
+                        Collection<Node> path = astar.findPath(currentTile, targetTile);
+                        player.moveTo(path);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        Gdx.app.error(LOG_TAG, "Tile not selectable");
+                    }
                 }
-
                 return false;
             }
         }));
@@ -96,7 +158,8 @@ public class RoomState implements Screen {
         this.camera.setToOrtho(false);
 
         Tile tile  = this.tileMap.selectTile(7, 3);
-        this.player = new Player(new Texture("player/player_1.png"), new Vector2(tile.getX(), tile.getY()), objects);
+        Player p = new Player(new Texture("player_1.png"), new Vector2(tile.getX(), tile.getY()));
+        p.uploadToServer();
     }
 
     @Override
@@ -109,13 +172,16 @@ public class RoomState implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.setProjectionMatrix(this.camera.combined);
-
-        this.player.update();
-
         batch.begin();
         this.tileMap.drawMap(batch);
-        this.objects.forEach(o -> {
-            o.draw(batch);
+
+        this.objects.forEach((key, value) -> {
+            value.update();
+            value.draw(batch);
+
+            if (value.equals(this.player)) {
+                this.player.updateServer(key);
+            }
         });
         batch.end();
 
@@ -138,12 +204,18 @@ public class RoomState implements Screen {
 
     @Override
     public void hide() {
-
     }
 
     @Override
     public void dispose() {
         batch.dispose();
+
+        for (Map.Entry<Integer, GameObject> entry : objects.entrySet()) {
+            if (entry.getValue().equals(player)) {
+                WebSocket.getInstance().send("/game/delete", entry.getKey());
+            }
+        }
+        Gdx.app.exit();
     }
 
     private Matrix4 getInverseMatrix() {

@@ -1,8 +1,11 @@
 package fi.chaoscompany.server.controller;
 
 
+import fi.chaoscompany.server.models.MapMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,5 +35,11 @@ public class MapController {
     @RequestMapping(method = RequestMethod.GET)
     public MapMessage getMap() {
         return new MapMessage(map);
+    }
+
+    @MessageMapping("/map")
+    @SendTo("/map")
+    public Message test(String message) throws Exception {
+        return new Message("Greetings");
     }
 }
