@@ -77,7 +77,7 @@ public class RoomState implements Screen {
                 UpdateMessage update = (UpdateMessage) o;
                 GameObject gameObject = objects.get(update.getId());
 
-                if (gameObject != null && update.getSessionId().equals(WebSocket.getInstance().getId())) {
+                if (gameObject != null) {
                     gameObject.setPreviousPos(new Vector2(gameObject.getX(), gameObject.getY()));
                     gameObject.setX(update.getX());
                     gameObject.setY(update.getY());
@@ -189,8 +189,12 @@ public class RoomState implements Screen {
         this.tileMap.drawMap(batch);
 
         this.objects.forEach((key, value) -> {
-            value.update(key);
+            value.update();
             value.draw(batch);
+
+            if (value.equals(this.player)) {
+                this.player.updateServer(key);
+            }
         });
         batch.end();
 

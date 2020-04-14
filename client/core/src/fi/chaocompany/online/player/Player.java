@@ -57,7 +57,7 @@ public class Player extends GameObject {
         return new TextureRegion(texture, 0, 0, PlayerConstants.FRAME_WIDTH_PIXELS, PlayerConstants.FRAME_HEIGHT_PIXELS);
     }
 
-    public void update(int id) {
+    public void update() {
         stateTime += Gdx.graphics.getDeltaTime();
 
         Vector2 currentPos = new Vector2(getX(), getY());
@@ -75,7 +75,6 @@ public class Player extends GameObject {
         } else {
             setSprite(this.animations.get(direction).getKeyFrame(stateTime, true));
         }
-        super.update(id);
     }
 
     private int getDirection() {
