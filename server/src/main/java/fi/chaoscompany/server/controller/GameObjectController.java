@@ -42,11 +42,13 @@ public class GameObjectController {
         int id = update.getId();
         GameObject object = this.objects.get(id);
 
-        if (object.getSessionId().equals(update.getSessionId())) {
+        if (object != null) {
             object.setX(update.getX());
             object.setY(update.getY());
+            return new UpdateMessage(id, object.getX(), object.getY(), update.getSessionId());
         }
-        return new UpdateMessage(id, object.getX(), object.getY(), update.getSessionId());
+
+        return null;
     }
 
     @MessageMapping("/delete")
