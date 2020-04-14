@@ -63,22 +63,18 @@ public class Player extends GameObject {
         Vector2 currentPos = new Vector2(getX(), getY());
         Vector2 targetPos = new Vector2(this.targetX, this.targetY);
 
-        /*
-        if(currentPos.equals(getPreviousPos())) {
-            setSprite(this.animations.get(direction).getKeyFrames()[0]);
-        } else {
-
-        }
-         */
         if (!currentPos.equals(targetPos)) {
             this.move();
         }
 
-        if (this.direction != getDirection()) {
+        if (direction != getDirection() && !currentPos.equals(getPreviousPos())) {
             this.direction = getDirection();
         }
-        setSprite(this.animations.get(direction).getKeyFrame(stateTime, true));
-
+        if(currentPos.equals(getPreviousPos())) {
+            setSprite(this.animations.get(direction).getKeyFrames()[0]);
+        } else {
+            setSprite(this.animations.get(direction).getKeyFrame(stateTime, true));
+        }
         super.update(id);
     }
 
