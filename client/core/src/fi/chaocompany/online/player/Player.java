@@ -114,10 +114,12 @@ public class Player extends GameObject {
     }
 
     private void setTargetPosition() {
-        Tile targetTile = this.path.remove(0);
+        if (this.path.size() > 0) {
+            Tile targetTile = this.path.remove(0);
 
-        this.targetX = targetTile.getX();
-        this.targetY = targetTile.getY();
+            this.targetX = targetTile.getX();
+            this.targetY = targetTile.getY();
+        }
     }
 
     private Map<Integer, Animation<TextureRegion>> initAnimations(Texture sheet) {
