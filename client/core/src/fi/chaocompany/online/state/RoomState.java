@@ -158,7 +158,8 @@ public class RoomState implements Screen {
         this.camera.setToOrtho(false);
 
         Tile tile  = this.tileMap.selectTile(7, 3);
-        new Player(new Texture("player_1.png"), new Vector2(tile.getX(), tile.getY()));
+        Player p = new Player(new Texture("player_1.png"), new Vector2(tile.getX(), tile.getY()));
+        p.uploadToServer();
     }
 
     @Override

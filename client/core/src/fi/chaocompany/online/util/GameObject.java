@@ -13,6 +13,7 @@ public abstract class GameObject {
 
     private static final String LOG_TAG = GameObject.class.getSimpleName();
 
+    private Texture texture;
     private TextureRegion sprite;
 
     private float x;
@@ -26,6 +27,7 @@ public abstract class GameObject {
     public abstract void update();
 
     public GameObject(Texture texture, float x, float y) {
+        this.texture = texture;
         this.sprite = this.initSprite(texture);
         this.x = x;
         this.y = y;
@@ -35,12 +37,7 @@ public abstract class GameObject {
     }
 
     public GameObject(Texture texture, Vector2 pos) {
-        this.x = pos.x;
-        this.y = pos.y;
-
-        this.targetPos = new Vector2(this.x, this.y);
-        this.previousPos = new Vector2(this.x, this.y);
-        this.sendToServer(texture);
+        this(texture, pos.x, pos.y);
     }
 
     public void draw(SpriteBatch batch) {
@@ -94,8 +91,16 @@ public abstract class GameObject {
         return y;
     }
 
-    private void sendToServer(Texture texture) {
-        String path = ((FileTextureData)texture.getTextureData()).getFileHandle().path();
+    public Texture getTexture() {
+        return texture;
+    }
+
+    public void setTexture(Texture texture) {
+        this.texture = texture;
+    }
+
+    public void uploadToServer() {
+        String path = ((FileTextureData) getTexture().getTextureData()).getFileHandle().path();
         String clazz = getClass().getName();
 
         WebSocket.getInstance().send("/game/object/add", new ServerGameObject(getX(), getY(), path, clazz));
