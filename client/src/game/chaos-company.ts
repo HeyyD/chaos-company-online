@@ -11,6 +11,23 @@ function onPreload(): void {
   });
 }
 
+const startDrag = (scene: Phaser.Scene, camera: Phaser.Cameras.Scene2D.Camera): void => {
+  scene.input.off('pointerdown');
+
+  scene.input.on('pointermove', () => {
+    const x = scene.input.activePointer.x;
+    const y = scene.input.activePointer.y;
+  
+    camera.pan(x, y, 50);
+  });
+
+  scene.input.on('pointerup', () => {
+    scene.input.off('pointermove');
+    scene.input.off('pointerup');
+    scene.input.on('pointerdown', () => startDrag(scene, camera));
+  });
+};
+
 function onCreate(): void {
   console.log('on create');
 
@@ -32,12 +49,7 @@ function onCreate(): void {
   const tilemap = new Tilemap(this, map);
   const camera: Phaser.Cameras.Scene2D.Camera = this.cameras.main;
 
-  this.input.on('pointerdown', (): void => {
-    const x = this.input.activePointer.x;
-    const y = this.input.activePointer.y;
-  
-    camera.pan(x, y, 50);
-  });
+  this.input.on('pointerdown', () => startDrag(this, camera));
 
   camera.centerOn(600, 0);
   camera.setZoom(0.5);
