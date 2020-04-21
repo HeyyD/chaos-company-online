@@ -1,15 +1,13 @@
 import * as Phaser from 'phaser';
 import { Tilemap } from './tilemap/tilemap';
+import { TILE_WIDTH, TILE_HEIGHT } from './tilemap/constants';
 
 function onPreload(): void {
   console.log('on preload');
 
-  const TILE_WIDTH_PIXELS: number = 128;
-  const TILE_HEIGHT_PIXELS: number = 64;
-
   this.load.spritesheet('tilemap', '../../assets/tileset.png', {
-    frameWidth: TILE_WIDTH_PIXELS,
-    frameHeight: TILE_HEIGHT_PIXELS
+    frameWidth: TILE_WIDTH,
+    frameHeight: TILE_HEIGHT
   });
 }
 
