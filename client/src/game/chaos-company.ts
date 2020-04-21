@@ -32,10 +32,16 @@ function onCreate(): void {
   const tilemap = new Tilemap(this, map);
   const camera: Phaser.Cameras.Scene2D.Camera = this.cameras.main;
 
+  this.input.on('pointerdown', (): void => {
+    const x = this.input.activePointer.x;
+    const y = this.input.activePointer.y;
+  
+    camera.pan(x, y, 50);
+  });
+
   camera.centerOn(600, 0);
   camera.setZoom(0.5);
 }
-
 
 const config: Phaser.Types.Core.GameConfig = {
   title: 'Chaos Company',
