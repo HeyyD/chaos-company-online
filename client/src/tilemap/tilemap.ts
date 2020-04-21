@@ -1,7 +1,7 @@
 import * as Phaser from 'phaser';
 
 import Tile from './tile';
-import { TILE_WIDTH, TILE_HEIGHT } from './constants';
+import { TILE_WIDTH, TILE_HEIGHT, } from './constants';
 
 export class Tilemap {
 

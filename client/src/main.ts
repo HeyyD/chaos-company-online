@@ -1,13 +1,13 @@
 import * as Phaser from 'phaser';
-import { Tilemap } from './tilemap/tilemap';
-import { TILE_WIDTH, TILE_HEIGHT } from './tilemap/constants';
+import { Tilemap, } from './tilemap/tilemap';
+import { TILE_WIDTH, TILE_HEIGHT, } from './tilemap/constants';
 
 function onPreload(): void {
   console.log('on preload');
 
   this.load.spritesheet('tilemap', '../../assets/tileset.png', {
     frameWidth: TILE_WIDTH,
-    frameHeight: TILE_HEIGHT
+    frameHeight: TILE_HEIGHT,
   });
 }
 
@@ -15,18 +15,18 @@ function onCreate(): void {
   console.log('on create');
 
   const map: number[][] = [
-    [0, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7],
-    [2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 5],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 5],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 5],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 5],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 5],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 5],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 5],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 5],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 5],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 3],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0]
+    [0, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7,],
+    [2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 5,],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 5,],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 5,],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 5,],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 5,],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 5,],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 5,],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 5,],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 5,],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 3,],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0,],
   ];
 
   const tilemap = new Tilemap(this, map);
