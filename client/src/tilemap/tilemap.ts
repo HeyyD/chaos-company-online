@@ -13,11 +13,12 @@ export class Tilemap {
   private tilemap: Tile[][] = [];
 
   public constructor(scene: Phaser.Scene, map: number[][]) {
+
     for (let i = 0; i < map.length; i++) {
       this.tilemap[i] = [];
       for (let j = map[i].length - 1; j >= 0; j--) {
         const x = (i * this.TILE_WIDTH_PIXELS / 2) + (j * this.TILE_WIDTH_PIXELS / 2);
-        const y = (i * this.TILE_HEIGHT_PIXELS / 2) + (j * this.TILE_HEIGHT_PIXELS / 2);
+        const y = (-(i * this.TILE_HEIGHT_PIXELS / 2) + (j * this.TILE_HEIGHT_PIXELS / 2)) * -1;
 
         this.tilemap[i][j] = new Tile(scene, 'tilemap', x, y, map[i][j]);
       }
