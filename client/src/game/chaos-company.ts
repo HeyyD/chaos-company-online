@@ -2,7 +2,7 @@ import * as Phaser from 'phaser';
 
 import { Tilemap, } from '../tilemap/tilemap';
 import { TILE_WIDTH, TILE_HEIGHT, } from '../tilemap/constants';
-import { pan, } from '../camera/gestures';
+import { pan, zoom, } from '../camera/gestures';
 
 function onPreload(): void {
   console.log('on preload');
@@ -35,6 +35,9 @@ function onCreate(): void {
   const camera: Phaser.Cameras.Scene2D.Camera = this.cameras.main;
 
   this.input.on('pointerdown', () => pan(this, camera));
+  this.input.on('wheel', (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
+      zoom(camera, deltaY);
+  });
 
   camera.centerOn(600, 0);
   camera.setZoom(0.5);

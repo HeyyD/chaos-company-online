@@ -20,3 +20,16 @@ export const pan = (scene: Phaser.Scene, camera: Phaser.Cameras.Scene2D.Camera):
     }); 
   }
 };
+
+export const zoom = (camera: Phaser.Cameras.Scene2D.Camera, amount: number): void => {
+
+  const zoom = camera.zoom + (-amount / 100);
+
+  if (zoom > 1) {
+    camera.zoomTo(1, 100);
+  } else if (zoom < 0.5) {
+    camera.zoomTo(0.5, 100);
+  } else {
+    camera.zoomTo(zoom, 100);
+  }
+};
