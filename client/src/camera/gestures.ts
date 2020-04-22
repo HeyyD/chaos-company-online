@@ -1,11 +1,14 @@
 export const pan = (scene: Phaser.Scene, camera: Phaser.Cameras.Scene2D.Camera): void => {
-  scene.input.off('pointerdown');
 
+  const originX = scene.input.activePointer.worldX;
+  const originY = scene.input.activePointer.worldY;
+
+  scene.input.off('pointerdown');
   scene.input.on('pointermove', () => {
-    const x = scene.input.activePointer.x;
-    const y = scene.input.activePointer.y;
+    const x = originX - scene.input.activePointer.worldX;
+    const y = originY - scene.input.activePointer.worldY;
   
-    camera.pan(x, y, 50);
+    camera.setScroll(camera.scrollX + x, camera.scrollY + y);
   });
 
   scene.input.on('pointerup', () => {
