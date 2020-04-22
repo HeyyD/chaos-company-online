@@ -25,11 +25,15 @@ export const zoom = (camera: Phaser.Cameras.Scene2D.Camera, amount: number): voi
 
   const zoom = camera.zoom + (-amount / 100);
 
-  if (zoom > 1) {
-    camera.zoomTo(1, 100);
-  } else if (zoom < 0.5) {
-    camera.zoomTo(0.5, 100);
+  const min = 0.5;
+  const max = 1;
+  const duration = 100;
+
+  if (zoom > max) {
+    camera.zoomTo(max, duration);
+  } else if (zoom < min) {
+    camera.zoomTo(min, duration);
   } else {
-    camera.zoomTo(zoom, 100);
+    camera.zoomTo(zoom, duration);
   }
 };
