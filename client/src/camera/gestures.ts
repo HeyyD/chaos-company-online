@@ -25,7 +25,7 @@ export const zoom = (camera: Phaser.Cameras.Scene2D.Camera, amount: number): voi
 
   const zoom = camera.zoom + (-amount / 100);
 
-  const min = 0.5;
+  const min = 0.3;
   const max = 1;
   const duration = 100;
 
