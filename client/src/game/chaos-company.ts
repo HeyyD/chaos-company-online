@@ -1,17 +1,9 @@
 import * as Phaser from 'phaser';
+
 import { Tilemap, } from '../tilemap/tilemap';
 import { TILE_WIDTH, TILE_HEIGHT, } from '../tilemap/constants';
 
-function onPreload(): void {
-  console.log('on preload');
-
-  this.load.spritesheet('tilemap', '../../assets/tileset.png', {
-    frameWidth: TILE_WIDTH,
-    frameHeight: TILE_HEIGHT,
-  });
-}
-
-const startDrag = (scene: Phaser.Scene, camera: Phaser.Cameras.Scene2D.Camera): void => {
+const pan = (scene: Phaser.Scene, camera: Phaser.Cameras.Scene2D.Camera): void => {
   scene.input.off('pointerdown');
 
   scene.input.on('pointermove', () => {
@@ -24,9 +16,18 @@ const startDrag = (scene: Phaser.Scene, camera: Phaser.Cameras.Scene2D.Camera): 
   scene.input.on('pointerup', () => {
     scene.input.off('pointermove');
     scene.input.off('pointerup');
-    scene.input.on('pointerdown', () => startDrag(scene, camera));
+    scene.input.on('pointerdown', () => pan(scene, camera));
   });
 };
+
+function onPreload(): void {
+  console.log('on preload');
+
+  this.load.spritesheet('tilemap', '../../assets/tileset.png', {
+    frameWidth: TILE_WIDTH,
+    frameHeight: TILE_HEIGHT,
+  });
+}
 
 function onCreate(): void {
   console.log('on create');
@@ -49,7 +50,7 @@ function onCreate(): void {
   const tilemap = new Tilemap(this, map);
   const camera: Phaser.Cameras.Scene2D.Camera = this.cameras.main;
 
-  this.input.on('pointerdown', () => startDrag(this, camera));
+  this.input.on('pointerdown', () => pan(this, camera));
 
   camera.centerOn(600, 0);
   camera.setZoom(0.5);
